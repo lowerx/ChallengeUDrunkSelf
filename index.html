@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge Your Drunk Self</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles: load base first, then shared components, then per-test styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/reaction.css">
+  <link rel="stylesheet" href="css/findtom.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ════════ INTRO ════════ -->
+  <div class="screen active" id="screen-intro">
+    <div>
+      <div class="logo">Challenge<br><span>Your Drunk</span><br>Self</div>
+      <div class="tagline">Two tests. One verdict.</div>
+    </div>
+
+    <div class="card" style="display:flex; flex-direction:column; gap:0.75rem;">
+      <p class="section-label">Choose your tests</p>
+      <div class="test-cards">
+        <div class="test-card selected" id="card-reaction" onclick="toggleTest('reaction')">
+          <div class="icon">⚡</div>
+          <div class="tname">Reaction Time</div>
+          <div class="tdesc">Tap when the circle turns green</div>
+        </div>
+        <div class="test-card selected" id="card-findtom" onclick="toggleTest('findtom')">
+          <div class="icon">👀</div>
+          <div class="tname">Find Tom</div>
+          <div class="tdesc">Spot Tom in a crowd. Fast.</div>
+        </div>
+      </div>
+      <p style="font-size:0.7rem; color:var(--muted); text-align:center;">Tap a card to toggle it on/off</p>
+    </div>
+
+    <div class="how-it-works">
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Complete the selected tests one by one</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Each test is <strong>5 rounds</strong> and scores your speed</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Get a <strong>combined drunkness verdict</strong> at the end</p>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startSession()">Start</button>
+    <p class="science-note">Entertainment only · Not a medical device · Never drink and drive</p>
+  </div>
+
+  <!-- ════════ COUNTDOWN ════════ -->
+  <div class="screen" id="screen-countdown">
+    <div class="tagline" id="countdown-label">Get ready...</div>
+    <div class="countdown-num" id="countdown-num">3</div>
+  </div>
+
+  <!-- ════════ REACTION TIME TEST ════════ -->
+  <div class="screen" id="screen-reaction">
+    <div class="tagline" style="letter-spacing:0.1em;">⚡ REACTION TIME</div>
+    <div class="round-label" id="rt-round-label">Round 1 of 5</div>
+    <div class="progress-row" id="rt-progress"></div>
+    <div class="test-zone waiting" id="rt-zone" onclick="rtHandleTap()">
+      <div class="zone-label" style="color:var(--muted)">WAIT</div>
+      <div class="zone-sub">Don't tap yet</div>
+    </div>
+    <div class="round-result" id="rt-round-result"></div>
+  </div>
+
+  <!-- ════════ FIND TOM TEST ════════ -->
+  <div class="screen" id="screen-findtom">
+    <div class="tagline" style="letter-spacing:0.1em;">👀 FIND TOM</div>
+    <div class="round-label" id="ft-round-label">Round 1 of 5</div>
+    <div class="progress-row" id="ft-progress"></div>
+    <div class="tom-timer-bar-wrap">
+      <div class="tom-timer-bar" id="ft-timer-bar"></div>
+    </div>
+    <p class="tom-instruction">Tap <strong>Tom</strong> before time runs out</p>
+    <div class="faces-grid" id="faces-grid"></div>
+    <div class="round-result" id="ft-round-result"></div>
+  </div>
+
+  <!-- ════════ MID-TEST RESULTS ════════ -->
+  <div class="screen" id="screen-mid">
+    <div class="logo" style="font-size:1.4rem;">Test Complete!</div>
+    <div class="card" style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:0.6rem;">
+      <div class="level-badge" id="mid-badge">---</div>
+      <div style="font-size:1.8rem; font-family:'DM Mono',monospace; font-weight:500;" id="mid-score">---</div>
+      <div style="font-size:0.85rem; color:var(--muted);" id="mid-desc">---</div>
+    </div>
+    <button class="btn btn-primary" id="mid-next-btn" onclick="startNextTest()">Next →</button>
+  </div>
+
+  <!-- ════════ FINAL RESULTS ════════ -->
+  <div class="screen" id="screen-results">
+    <div class="logo" style="font-size:1.4rem; color:var(--text)">Your Verdict</div>
+    <div class="level-badge" id="final-badge">---</div>
+    <div class="verdict" id="final-verdict">---</div>
+    <div class="verdict-sub" id="final-sub">---</div>
+    <div class="divider"></div>
+    <p class="section-label">Score breakdown</p>
+    <div class="stats-grid" id="final-stats-grid"></div>
+    <div class="tip-box" id="final-tip">---</div>
+    <button class="btn btn-primary" onclick="goHome()">Play Again</button>
+    <button class="btn btn-ghost" onclick="shareResult()">Share Score</button>
+    <p class="science-note" id="final-science">---</p>
+  </div>
+
+</div><!-- /app -->
+
+<!--
+  Scripts load order matters:
+  1. data.js     — constants and level tables (no dependencies)
+  2. session.js  — navigation and results (depends on data.js)
+  3. reaction.js — reaction test logic (depends on session.js)
+  4. findtom.js  — find tom test logic (depends on session.js)
+-->
+<script src="js/data.js"></script>
+<script src="js/session.js"></script>
+<script src="js/reaction.js"></script>
+<script src="js/findtom.js"></script>
+</body>
+</html>

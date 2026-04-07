@@ -1,0 +1,63 @@
+/* ─── FIND TOM TEST ──────────────────────────────────────── */
+.tom-timer-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tom-timer-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.08s linear;
+}
+
+.tom-timer-bar.warning { background: #ffb432; }
+.tom-timer-bar.danger  { background: var(--accent2); }
+
+.tom-instruction {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.tom-instruction strong {
+  color: var(--text);
+}
+
+/* ─── FACES GRID ─────────────────────────────────────────── */
+.faces-grid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.face-cell {
+  background: var(--surface2);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 0.6rem 0.4rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.face-cell:active {
+  transform: scale(0.95);
+}
+
+.face-cell .face-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+
+.face-cell.correct { border-color: var(--accent3); background: rgba(92, 245, 200, 0.1); }
+.face-cell.wrong   { border-color: var(--accent2); background: rgba(255, 92, 92, 0.1); }
+.face-cell.reveal  { border-color: var(--accent3); background: rgba(92, 245, 200, 0.07); }

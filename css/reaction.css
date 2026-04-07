@@ -1,0 +1,44 @@
+/* ─── REACTION TIME TEST ─────────────────────────────────── */
+.test-zone {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.test-zone:active {
+  transform: scale(0.97);
+}
+
+.test-zone.waiting   { background: var(--surface);                   border-color: var(--border); }
+.test-zone.ready     { background: rgba(200, 245, 62, 0.12);         border-color: var(--accent); }
+.test-zone.too-early { background: rgba(255, 92, 92, 0.12);          border-color: var(--accent2); }
+.test-zone.done-round{ background: rgba(92, 245, 200, 0.08);         border-color: var(--accent3); }
+
+.zone-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.zone-sub {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.zone-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--accent3);
+}
