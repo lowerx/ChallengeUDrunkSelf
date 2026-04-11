@@ -1,0 +1,89 @@
+/* ─── STROOP COLOR TEST ──────────────────────────────────── */
+
+/* Central word display */
+.stroop-word-wrap {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--round);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stroop-prompt {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.stroop-word {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  /* color set dynamically via JS */
+}
+
+/* Color choice buttons */
+.stroop-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.stroop-btn {
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 0.9rem 0.5rem;
+  cursor: pointer;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  transition: transform 0.1s, border-color 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.stroop-btn:active { transform: scale(0.96); }
+
+/* Each button gets its background color via inline style in JS */
+.stroop-btn .swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stroop-btn.correct {
+  border-color: var(--accent3);
+  box-shadow: 0 0 0 2px rgba(92, 245, 200, 0.2);
+}
+
+.stroop-btn.wrong {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 2px rgba(255, 92, 92, 0.2);
+}
+
+/* Round score flash */
+.stroop-flash {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  text-align: center;
+  min-height: 1.1rem;
+  transition: color 0.2s;
+}
+
+/* Accuracy track */
+.stroop-accuracy {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.05em;
+}

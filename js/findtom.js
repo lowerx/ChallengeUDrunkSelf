@@ -60,7 +60,7 @@ function startFindTomTest() {
   ftTimes = [];
   ftRound = 0;
   showScreen('screen-findtom');
-  buildProgress('ft-progress', 0);
+  buildProgress('ft-progress', 0, FT_ROUNDS);
   document.getElementById('ft-round-result').textContent = '';
   ftNextRound();
 }
@@ -70,8 +70,8 @@ function ftNextRound() {
   ftAnswered = false;
   clearInterval(ftTimerInterval);
 
-  buildProgress('ft-progress', ftRound);
-  document.getElementById('ft-round-label').textContent  = `Round ${ftRound + 1} of ${ROUNDS}`;
+  buildProgress('ft-progress', ftRound, FT_ROUNDS);
+  document.getElementById('ft-round-label').textContent  = `Round ${ftRound + 1} of ${FT_ROUNDS}`;
   document.getElementById('ft-round-result').textContent = '';
   document.getElementById('ft-round-result').className   = 'round-result';
 
@@ -158,7 +158,7 @@ function ftHandleTap(cell, isTom, timeout = false) {
   }
 
   ftRound++;
-  if (ftRound < ROUNDS) {
+  if (ftRound < FT_ROUNDS) {
     setTimeout(ftNextRound, 1500);
   } else {
     const avg = Math.round(ftTimes.reduce((a, b) => a + b, 0) / ftTimes.length);

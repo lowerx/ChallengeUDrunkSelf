@@ -1,24 +1,24 @@
 // ─── REACTION TIME STATE ──────────────────────────────────
-let rtTimes  = [];
-let rtRound  = 0;
-let rtState  = 'idle';   // 'idle' | 'waiting' | 'ready' | 'penalty' | 'done'
-let rtTimer  = null;
-let rtStart  = null;
+let rtTimes = [];
+let rtRound = 0;
+let rtState = 'idle';   // 'idle' | 'waiting' | 'ready' | 'penalty' | 'done'
+let rtTimer = null;
+let rtStart = null;
 
 // ─── ENTRY POINT ──────────────────────────────────────────
 function startReactionTest() {
   rtTimes = [];
   rtRound = 0;
   showScreen('screen-reaction');
-  buildProgress('rt-progress', 0);
+  buildProgress('rt-progress', 0, RT_ROUNDS);
   document.getElementById('rt-round-result').textContent = '';
   rtScheduleRound();
 }
 
 // ─── ROUND LIFECYCLE ──────────────────────────────────────
 function rtScheduleRound() {
-  document.getElementById('rt-round-label').textContent = `Round ${rtRound + 1} of ${ROUNDS}`;
-  buildProgress('rt-progress', rtRound);
+  document.getElementById('rt-round-label').textContent = `Round ${rtRound + 1} of ${RT_ROUNDS}`;
+  buildProgress('rt-progress', rtRound, RT_ROUNDS);
 
   const zone = document.getElementById('rt-zone');
   zone.className = 'test-zone waiting';
@@ -31,8 +31,6 @@ function rtScheduleRound() {
   document.getElementById('rt-round-result').className   = 'round-result';
 
   rtState = 'waiting';
-
-  // Random delay so the user can't predict the trigger
   const delay = 1500 + Math.random() * 3000;
   rtTimer = setTimeout(() => {
     zone.className = 'test-zone ready';
@@ -48,7 +46,6 @@ function rtScheduleRound() {
 // ─── TAP HANDLER ──────────────────────────────────────────
 function rtHandleTap() {
   if (rtState === 'waiting') {
-    // Tapped too early — penalise and replay the round
     clearTimeout(rtTimer);
     const zone = document.getElementById('rt-zone');
     zone.className = 'test-zone too-early';
@@ -57,11 +54,9 @@ function rtHandleTap() {
       <div class="zone-sub">Patience! Retrying...</div>
     `;
     rtState = 'penalty';
-
     const res = document.getElementById('rt-round-result');
     res.textContent = 'Tapped too early — round replayed';
     res.className   = 'round-result bad';
-
     setTimeout(rtScheduleRound, 1800);
 
   } else if (rtState === 'ready') {
@@ -82,8 +77,7 @@ function rtHandleTap() {
 
     rtRound++;
 
-    if (rtRound < ROUNDS) {
-      // Brief pause then reset circle for next round
+    if (rtRound < RT_ROUNDS) {
       setTimeout(() => {
         zone.innerHTML = `
           <div class="zone-label" style="color:var(--muted)">WAIT</div>
