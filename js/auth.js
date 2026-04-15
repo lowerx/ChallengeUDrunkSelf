@@ -42,30 +42,36 @@
 //
 // ═══════════════════════════════════════════════════════════
 
-import { createClient } from '@supabase/supabase-js';
-const SUPABASE_URL  = 'https://oxcmhymldfvetradvmhq.supabase.co';   // e.g. https://xyzxyz.supabase.co
-const SUPABASE_ANON = process.env.SUPABASE_KEY;
+const SUPABASE_URL  = 'https://oxcmhymldfvetradvmhq.supabase.co'; 
+const SUPABASE_ANON = 'sb_publishable_FiVSP20-OjzLhjMCzyNZrQ_fPOBPy46';
 
 // ─── CLIENT INIT ──────────────────────────────────────────
 let supabase = null;
 
 function initSupabase() {
-  if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+  // Ensure the intro auth button shows by default even if not configured
+  if (typeof updateNavAuth === 'function') updateNavAuth(null);
+
+  if (SUPABASE_URL.includes('YOUR_SUPABASE_URL') || SUPABASE_ANON.includes('YOUR_SUPABASE_ANON_KEY')) {
     console.info('[Auth] Supabase not configured — auth disabled. See auth.js for setup instructions.');
-    updateNavAuth(null);
     return;
   }
   try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    supabase.auth.onAuthStateChange((_event, session) => {
-      updateNavAuth(session?.user || null);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      updateNavAuth(data?.session?.user || null);
-    });
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      
+      supabase.auth.onAuthStateChange((_event, session) => {
+        updateNavAuth(session?.user || null);
+      });
+      
+      supabase.auth.getSession().then(({ data }) => {
+        updateNavAuth(data?.session?.user || null);
+      });
+    } else {
+      console.warn('[Auth] Supabase SDK not found on window object.');
+    }
   } catch (e) {
     console.warn('[Auth] Supabase init failed:', e.message);
-    updateNavAuth(null);
   }
 }
 
@@ -126,9 +132,12 @@ async function authLogin() {
 async function authGoogle() {
   if (!supabase) { setAuthMsg('Auth not configured yet.', 'error'); return; }
 
+  // Use current origin to handle both local dev and production automatically
+  const redirectUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/app.html');
+
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/app.html' }
+    options: { redirectTo: redirectUrl }
   });
 
   if (error) setAuthMsg(error.message, 'error');
@@ -161,8 +170,13 @@ async function saveGameSession(scores, combinedLevel, combinedBadge) {
   };
 
   const { error } = await supabase.from('game_sessions').insert(row);
-  if (error) console.warn('[Auth] Failed to save session:', error.message);
-  else        console.info('[Auth] Session saved.');
+  if (error) {
+    console.warn('[Auth] Failed to save session:', error.message);
+  } else {
+    console.info('[Auth] Session saved.');
+    const notice = document.getElementById('save-notice');
+    if (notice) notice.style.display = 'block';
+  }
 }
 
 // ─── GET CURRENT USER ──────────────────────────────────────

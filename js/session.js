@@ -172,6 +172,12 @@ function showFinalResults() {
   document.getElementById('final-tip').innerHTML        = '<strong>Tip:</strong> ' + lv.tip.slice(2).trim();
   document.getElementById('final-science').textContent  = sciNote;
 
+  // Save to Supabase if logged in
+  if (typeof saveGameSession === 'function') {
+    document.getElementById('save-notice').style.display = 'none';
+    saveGameSession(scores, avgLvlIdx, lv.badge);
+  }
+
   showScreen('screen-results');
 }
 

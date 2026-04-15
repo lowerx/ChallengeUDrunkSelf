@@ -17,7 +17,7 @@ function injectNav() {
       </ul>
 
       <div class="nav-auth" id="nav-auth">
-        <!-- Filled by updateNavAuth() once auth state is known -->
+        <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
         <a href="app.html" class="nav-btn-play">Play Now</a>
       </div>
     </nav>
@@ -30,6 +30,9 @@ function injectNav() {
 // Called by auth.js whenever auth state changes
 function updateNavAuth(user) {
   const navAuth = document.getElementById('nav-auth');
+  const introAuth = document.getElementById('intro-auth-wrapper');
+  
+  if (introAuth) introAuth.style.display = user ? 'none' : 'block';
   if (!navAuth) return;
 
   if (user) {

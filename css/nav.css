@@ -63,16 +63,19 @@
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.35rem 0.875rem;
-  background: transparent;
+  background: var(--surface2);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 100px;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.15s;
   letter-spacing: 0.02em;
 }
 
-.nav-btn-login:hover { border-color: rgba(255,255,255,0.2); }
+.nav-btn-login:hover { 
+  border-color: rgba(255,255,255,0.2);
+  background: var(--surface);
+}
 
 .nav-btn-play {
   font-family: 'DM Sans', sans-serif;
