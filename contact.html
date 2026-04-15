@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Challenge Your Drunk Self</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="page-section" style="margin-top:1.5rem;">
+    <div class="hero-badge" style="display:inline-block; margin-bottom:0.75rem;">Get in touch</div>
+    <h1 class="hero-title" style="font-size:clamp(2.5rem,10vw,4.5rem);">
+      Say <em>Hello</em>
+    </h1>
+    <p class="page-section p" style="font-size:0.875rem; color:var(--muted); margin-top:0.5rem; line-height:1.7;">
+      Got feedback, a bug report, a collaboration idea, or just want to chat about the science?
+      I'd love to hear from you.
+    </p>
+  </div>
+
+  <div class="contact-grid">
+
+    <!-- FORM -->
+    <div>
+      <div class="contact-form" id="contact-form">
+        <div class="form-field">
+          <label>Your name</label>
+          <input type="text" id="cf-name" placeholder="Alex">
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="cf-email" placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label>Subject</label>
+          <select id="cf-subject">
+            <option value="" disabled selected>Choose a topic...</option>
+            <option value="feedback">Feedback on the app</option>
+            <option value="bug">Bug report</option>
+            <option value="science">Question about the science</option>
+            <option value="collab">Collaboration / partnership</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea id="cf-message" placeholder="Tell me more..."></textarea>
+        </div>
+        <button class="contact-submit" onclick="submitContact()">Send Message</button>
+        <div class="form-msg" id="form-msg"></div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="contact-info">
+
+      <div class="contact-info-item">
+        <div class="contact-info-icon">✉️</div>
+        <div>
+          <h4>Email</h4>
+          <p><a href="mailto:vlad.shurigin2014@gmail.com">vlad.shurigin2014@gmail.com</a></p>
+        </div>
+      </div>
+
+      <div class="contact-info-item">
+        <div class="contact-info-icon">🔗</div>
+        <div>
+          <h4>LinkedIn</h4>
+          <p><a href="https://linkedin.com" target="_blank">Vladislav Surighin</a></p>
+        </div>
+      </div>
+
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📍</div>
+        <div>
+          <h4>Location</h4>
+          <p>Villejuif, France<br>SUP'Biotech Institute</p>
+        </div>
+      </div>
+
+      <div class="contact-info-item">
+        <div class="contact-info-icon">⏱</div>
+        <div>
+          <h4>Response time</h4>
+          <p>Usually within 48 hours. I'm a student so bear with me.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/auth.js"></script>
+<script>
+// Simple contact form — in production replace this with
+// a Supabase table insert or a service like Formspree/Resend.
+function submitContact() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const subject = document.getElementById('cf-subject').value;
+  const message = document.getElementById('cf-message').value.trim();
+  const msg     = document.getElementById('form-msg');
+
+  if (!name || !email || !subject || !message) {
+    msg.textContent = 'Please fill in all fields.';
+    msg.className   = 'form-msg error';
+    return;
+  }
+
+  // TODO: replace with Supabase insert or Formspree endpoint
+  // e.g. fetch('https://formspree.io/f/YOUR_ID', { method:'POST', body: JSON.stringify({name,email,subject,message}) })
+
+  // For now: simulate success
+  msg.textContent = "Message sent! I'll get back to you soon.";
+  msg.className   = 'form-msg success';
+  document.getElementById('cf-name').value    = '';
+  document.getElementById('cf-email').value   = '';
+  document.getElementById('cf-subject').value = '';
+  document.getElementById('cf-message').value = '';
+}
+</script>
+</body>
+</html>

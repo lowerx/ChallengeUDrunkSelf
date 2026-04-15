@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play — Challenge Your Drunk Self</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/reaction.css">
+  <link rel="stylesheet" href="css/findtom.css">
+  <link rel="stylesheet" href="css/stroop.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    /* Override body alignment for the game view */
+    body { align-items: flex-start; }
+    .game-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 1.25rem 0.875rem 2.5rem;
+    }
+    .game-inner {
+      width: 100%;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav injected by nav.js -->
+
+<div class="game-wrap">
+<div class="game-inner">
+
+  <!-- ════════ INTRO ════════ -->
+  <div class="screen active" id="screen-intro">
+    <div>
+      <div class="logo">Challenge<br><span>Your Drunk</span><br>Self</div>
+      <div class="tagline">Three tests. One verdict.</div>
+    </div>
+
+    <div class="card" style="display:flex; flex-direction:column; gap:0.625rem;">
+      <p class="section-label">Choose your tests</p>
+      <div class="test-cards">
+        <div class="test-card selected" id="card-reaction" onclick="toggleTest('reaction')">
+          <div class="icon">⚡</div>
+          <div class="tname">Reaction</div>
+          <div class="tdesc">Tap the circle · 3 rounds</div>
+        </div>
+        <div class="test-card selected" id="card-findtom" onclick="toggleTest('findtom')">
+          <div class="icon">👀</div>
+          <div class="tname">Find Tom</div>
+          <div class="tdesc">Spot Tom · 5 rounds</div>
+        </div>
+        <div class="test-card selected" id="card-stroop" onclick="toggleTest('stroop')">
+          <div class="icon">🎨</div>
+          <div class="tname">Color Test</div>
+          <div class="tdesc">Tap ink color · 5 rounds</div>
+        </div>
+      </div>
+      <p style="font-size:0.62rem; color:var(--muted); text-align:center;">Tap a card to toggle on/off</p>
+    </div>
+
+    <div class="how-it-works">
+      <div class="step"><div class="step-num">1</div><p>Complete each selected test one by one</p></div>
+      <div class="step"><div class="step-num">2</div><p>Each test scores your <strong>speed and accuracy</strong></p></div>
+      <div class="step"><div class="step-num">3</div><p>Get your <strong>combined drunkness verdict</strong></p></div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startSession()">Start</button>
+    <p class="science-note">Entertainment only · Not a medical device · Never drink and drive</p>
+  </div>
+
+  <!-- ════════ COUNTDOWN ════════ -->
+  <div class="screen" id="screen-countdown">
+    <div class="tagline" id="countdown-label">Get ready...</div>
+    <div class="countdown-num" id="countdown-num">3</div>
+  </div>
+
+  <!-- ════════ REACTION TIME TEST ════════ -->
+  <div class="screen" id="screen-reaction">
+    <div class="tagline" style="letter-spacing:0.1em;">⚡ REACTION TIME</div>
+    <div class="round-label" id="rt-round-label">Round 1 of 3</div>
+    <div class="progress-row" id="rt-progress"></div>
+    <div class="test-zone waiting" id="rt-zone" onclick="rtHandleTap()">
+      <div class="zone-label" style="color:var(--muted)">WAIT</div>
+      <div class="zone-sub">Don't tap yet</div>
+    </div>
+    <div class="round-result" id="rt-round-result"></div>
+  </div>
+
+  <!-- ════════ FIND TOM TEST ════════ -->
+  <div class="screen" id="screen-findtom">
+    <div class="tagline" style="letter-spacing:0.1em;">👀 FIND TOM</div>
+    <div class="round-label" id="ft-round-label">Round 1 of 5</div>
+    <div class="progress-row" id="ft-progress"></div>
+    <div class="tom-timer-bar-wrap">
+      <div class="tom-timer-bar" id="ft-timer-bar"></div>
+    </div>
+    <p class="tom-instruction">Tap <strong>Tom</strong> before time runs out</p>
+    <div class="faces-grid" id="faces-grid"></div>
+    <div class="round-result" id="ft-round-result"></div>
+  </div>
+
+  <!-- ════════ STROOP COLOR TEST ════════ -->
+  <div class="screen" id="screen-stroop">
+    <div class="tagline" style="letter-spacing:0.1em;">🎨 COLOR TEST</div>
+    <div class="round-label" id="stroop-round-label">Round 1 of 5</div>
+    <div class="progress-row" id="stroop-progress"></div>
+    <div class="stroop-word-wrap">
+      <p class="stroop-prompt" id="stroop-prompt">Tap the INK color — not the word!</p>
+      <div class="stroop-word" id="stroop-word">---</div>
+    </div>
+    <div class="stroop-choices" id="stroop-choices"></div>
+    <div class="stroop-flash" id="stroop-flash"></div>
+    <div class="stroop-accuracy" id="stroop-accuracy"></div>
+  </div>
+
+  <!-- ════════ MID-TEST RESULTS ════════ -->
+  <div class="screen" id="screen-mid">
+    <div class="logo" style="font-size:1.2rem;">Test Complete!</div>
+    <div class="card" style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+      <div class="level-badge" id="mid-badge">---</div>
+      <div style="font-size:1.6rem; font-family:'DM Mono',monospace; font-weight:500;" id="mid-score">---</div>
+      <div style="font-size:0.8rem; color:var(--muted);" id="mid-desc">---</div>
+    </div>
+    <button class="btn btn-primary" id="mid-next-btn" onclick="startNextTest()">Next →</button>
+  </div>
+
+  <!-- ════════ FINAL RESULTS ════════ -->
+  <div class="screen" id="screen-results">
+    <div class="logo" style="font-size:1.2rem; color:var(--text)">Your Verdict</div>
+    <div class="level-badge" id="final-badge">---</div>
+    <div class="verdict" id="final-verdict">---</div>
+    <div class="verdict-sub" id="final-sub">---</div>
+
+    <!-- Save notice (shown when logged in) -->
+    <div id="save-notice" style="display:none; font-size:0.7rem; color:var(--accent3); text-align:center;">
+      ✓ Score saved to your account
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Score breakdown</p>
+    <div class="stats-grid" id="final-stats-grid"></div>
+    <div class="tip-box" id="final-tip">---</div>
+    <button class="btn btn-primary" onclick="goHome()">Play Again</button>
+    <button class="btn btn-ghost" onclick="shareResult()">Share Score</button>
+    <p class="science-note" id="final-science">---</p>
+  </div>
+
+</div><!-- /game-inner -->
+</div><!-- /game-wrap -->
+
+<!--
+  Load order:
+  1. data.js     — constants, level tables, color data
+  2. session.js  — navigation, session flow, results, share
+  3. reaction.js — reaction time test
+  4. findtom.js  — find tom test
+  5. stroop.js   — stroop color test
+  6. nav.js      — shared nav + auth modal
+  7. auth.js     — Supabase auth
+-->
+<script src="js/data.js"></script>
+<script src="js/session.js"></script>
+<script src="js/reaction.js"></script>
+<script src="js/findtom.js"></script>
+<script src="js/stroop.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

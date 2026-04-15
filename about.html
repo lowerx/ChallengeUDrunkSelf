@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Challenge Your Drunk Self</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-section" style="margin-top:1.5rem;">
+    <div class="hero-badge" style="display:inline-block; margin-bottom:0.75rem;">About the project</div>
+    <h1 class="hero-title" style="font-size:clamp(2.5rem,10vw,4.5rem);">
+      Built for <em>Honest</em><br>Self-Awareness
+    </h1>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="page-section">
+    <h2>The Problem</h2>
+    <p>
+      People consistently <strong>underestimate how drunk they are</strong>. This isn't a moral failing — it's
+      a neurological one. Alcohol impairs the very cognitive functions you'd use to assess your own impairment.
+      The result: overdrinking, poor decisions, and sometimes dangerous situations.
+    </p>
+    <p>
+      Existing tools are either medical-grade (breathalyzers, clinical tests) or purely social (how many drinks?).
+      Neither works in a real party context. We wanted something in between: fun, fast, and grounded in real science.
+    </p>
+  </div>
+
+  <!-- THE SCIENCE -->
+  <div class="page-section">
+    <h2>The Science</h2>
+    <p>
+      Each test in this app targets a specific cognitive domain that research has shown to degrade measurably
+      with alcohol — even at low blood alcohol concentrations.
+    </p>
+
+    <div class="tests-preview" style="margin-top:0.75rem;">
+      <div class="preview-card">
+        <div class="icon">⚡</div>
+        <h3>Simple Reaction Time</h3>
+        <p>Measures how fast the motor system responds to a visual cue. At BAC 0.05%, reaction time increases ~15%. At 0.08% (legal limit in many countries), ~50ms extra delay — enough to matter.</p>
+        <span class="sci-tag">Mets et al., 2011 · Fillmore et al., 2002</span>
+      </div>
+      <div class="preview-card">
+        <div class="icon">👀</div>
+        <h3>Visual Search (Find Tom)</h3>
+        <p>Selective attention — the ability to find a target among distractors — is impaired by alcohol from BAC 0.04%. The crowd grows harder with each round to amplify this effect.</p>
+        <span class="sci-tag">Schweizer & Vogel-Sprott, 2008</span>
+      </div>
+      <div class="preview-card">
+        <div class="icon">🎨</div>
+        <h3>Stroop Interference</h3>
+        <p>The Stroop task is one of the most replicated findings in cognitive psychology (over 700 studies). It directly tests inhibitory control — the prefrontal cortex function most affected by alcohol.</p>
+        <span class="sci-tag">MacLeod, 1991 · Stroop, 1935</span>
+      </div>
+    </div>
+
+    <p style="margin-top:1rem;">
+      Important: this app provides a <strong>relative measure</strong>, not an absolute BAC reading. Individual
+      baseline reaction times vary, alcohol absorption varies, and phone hardware introduces ~50ms of touchscreen
+      latency on top. The calibration targets are adjusted for phone use. For a true BAC reading, use a certified breathalyzer.
+    </p>
+  </div>
+
+  <!-- THE TEAM -->
+  <div class="page-section">
+    <h2>The Team</h2>
+    <p>Built by a biotechnology engineering student at SUP'Biotech (Villejuif, France) as an MVP concept combining
+       neuroscience, UX design, and data engineering.</p>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">VS</div>
+        <h3>Vladislav Surighin</h3>
+        <div class="role">Founder · Developer</div>
+        <p>Biotech engineering student specialising in neuro and cell biology. Python developer with background in data engineering.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="page-section">
+    <h2>What's Coming</h2>
+    <p>
+      This is an early MVP. Planned features include <strong>user accounts and history</strong> (track your baseline
+      sober scores and compare them to tonight), <strong>party leaderboards</strong> (who in the room is most impaired?),
+      and a <strong>memory test</strong> as a fourth game. A Flask + Supabase backend is in development.
+    </p>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="page-section">
+    <h2>Disclaimer</h2>
+    <p>
+      This app is for entertainment and informal self-awareness only. It is not a medical device, not a substitute
+      for a certified breathalyzer, and not a basis for any legal determination of impairment. Do not use this app
+      to decide whether it is safe to drive — <strong>never drink and drive</strong>.
+    </p>
+    <p>
+      If you or someone you know needs support with alcohol use, contact
+      <a href="https://www.alcoologie.org" target="_blank" style="color:var(--accent);">the SFA (France)</a>
+      or your local health authority.
+    </p>
+  </div>
+
+  <div style="margin-top:2rem; text-align:center;">
+    <a href="app.html" class="btn-hero-primary">Take the Test</a>
+  </div>
+
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
