@@ -1,12 +1,6 @@
 /* ─── NAVIGATION BAR ─────────────────────────────────────── */
 .nav {
   width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.25rem;
   background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -16,6 +10,15 @@
   z-index: 100;
 }
 
+.nav-container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+}
+
 .nav-logo {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.1rem;
@@ -23,9 +26,16 @@
   color: var(--accent);
   text-decoration: none;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .nav-logo span { color: var(--text); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 
 .nav-links {
   display: flex;
@@ -56,6 +66,95 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Hamburger Toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nav-toggle span {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Menu */
+.nav-mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  gap: 0.5rem;
+}
+
+.nav-mobile-menu.open {
+  display: flex;
+}
+
+.nav-mobile-menu a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.75rem 0;
+}
+
+.nav-mobile-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.nav-mobile-auth .nav-btn-play,
+.nav-mobile-auth .nav-btn-login {
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  display: block;
+  box-sizing: border-box;
+}
+
+.nav-mobile-auth .nav-btn-login {
+  font-weight: 600;
+}
+
+.nav-mobile-auth .nav-btn-play {
+  font-weight: 700;
+  color: #0a0a0f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links, .nav-auth {
+    display: none;
+  }
+  .nav-toggle {
+    display: flex;
+  }
+}
+
+.nav-toggle.active span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.active span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 .nav-btn-login {

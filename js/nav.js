@@ -8,17 +8,38 @@ function injectNav() {
 
   const navHTML = `
     <nav class="nav">
-      <a href="index.html" class="nav-logo">Challenge <span>Your Drunk</span> Self</a>
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">Challenge <span>Your Drunk</span> Self</a>
 
-      <ul class="nav-links">
-        <li><a href="index.html" ${isActive('index.html')}>Home</a></li>
-        <li><a href="about.html" ${isActive('about.html')}>About</a></li>
-        <li><a href="contact.html" ${isActive('contact.html')}>Contact</a></li>
-      </ul>
+        <div class="nav-right">
+          <ul class="nav-links">
+            <li><a href="index.html" ${isActive('index.html')}>Home</a></li>
+            <li><a href="about.html" ${isActive('about.html')}>About</a></li>
+            <li><a href="contact.html" ${isActive('contact.html')}>Contact</a></li>
+          </ul>
 
-      <div class="nav-auth" id="nav-auth">
-        <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
-        <a href="app.html" class="nav-btn-play">Play Now</a>
+          <div class="nav-auth" id="nav-auth">
+            <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
+            <a href="app.html" class="nav-btn-play">Play Now</a>
+          </div>
+
+          <button class="nav-toggle" id="nav-toggle" onclick="toggleMobileMenu(event)">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-mobile-menu" id="nav-mobile-menu">
+        <a href="index.html" ${isActive('index.html')} onclick="toggleMobileMenu()">Home</a>
+        <a href="about.html" ${isActive('about.html')} onclick="toggleMobileMenu()">About</a>
+        <a href="contact.html" ${isActive('contact.html')} onclick="toggleMobileMenu()">Contact</a>
+        <div class="divider"></div>
+        <div class="nav-mobile-auth" id="nav-mobile-auth">
+           <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
+           <a href="app.html" class="nav-btn-play">Play Now</a>
+        </div>
       </div>
     </nav>
   `;
@@ -27,38 +48,50 @@ function injectNav() {
   document.body.insertAdjacentHTML('afterbegin', navHTML);
 }
 
+function toggleMobileMenu(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('nav-mobile-menu');
+  const toggle = document.getElementById('nav-toggle');
+  menu?.classList.toggle('open');
+  toggle?.classList.toggle('active');
+}
+
 // Called by auth.js whenever auth state changes
 function updateNavAuth(user) {
   const navAuth = document.getElementById('nav-auth');
+  const navMobileAuth = document.getElementById('nav-mobile-auth');
   const introAuth = document.getElementById('intro-auth-wrapper');
   
   if (introAuth) introAuth.style.display = user ? 'none' : 'block';
-  if (!navAuth) return;
+  
+  const getAuthHTML = (isMobile) => {
+    if (user) {
+      const initials = (user.user_metadata?.display_name || user.email || 'U')
+        .split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
 
-  if (user) {
-    // Show user pill + dropdown
-    const initials = (user.user_metadata?.display_name || user.email || 'U')
-      .split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+      return `
+        <div class="nav-user-wrap">
+          <div class="nav-user" onclick="toggleUserMenu(event)">
+            <div class="nav-avatar">${initials}</div>
+            <span class="nav-username">${displayName}</span>
+          </div>
+          <div class="user-menu" id="user-menu">
+            <a href="app.html" class="user-menu-item">🎮 Play</a>
+            <button class="user-menu-item danger" onclick="authSignOut()">Sign out</button>
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
+        <a href="app.html" class="nav-btn-play">Play Now</a>
+      `;
+    }
+  };
 
-    navAuth.innerHTML = `
-      <div class="nav-user-wrap">
-        <div class="nav-user" onclick="toggleUserMenu(event)">
-          <div class="nav-avatar">${initials}</div>
-          <span class="nav-username">${displayName}</span>
-        </div>
-        <div class="user-menu" id="user-menu">
-          <a href="app.html" class="user-menu-item">🎮 Play</a>
-          <button class="user-menu-item danger" onclick="authSignOut()">Sign out</button>
-        </div>
-      </div>
-    `;
-  } else {
-    navAuth.innerHTML = `
-      <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
-      <a href="app.html" class="nav-btn-play">Play Now</a>
-    `;
-  }
+  if (navAuth) navAuth.innerHTML = getAuthHTML(false);
+  if (navMobileAuth) navMobileAuth.innerHTML = getAuthHTML(true);
 }
 
 function toggleUserMenu(e) {
