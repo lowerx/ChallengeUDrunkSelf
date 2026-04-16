@@ -132,8 +132,12 @@ function saveGameSession(scores, combinedLevel, combinedBadge) {
       combined_badge: combinedBadge
     };
 
+    console.log('[Auth] Saving session to DB...', row);
     sbClient.from('game_sessions').insert(row).then(function(insertRes) {
-      if (!insertRes.error) {
+      if (insertRes.error) {
+        console.error('[Auth] Save failed:', insertRes.error.message, insertRes.error.details);
+      } else {
+        console.log('[Auth] Session saved successfully.');
         var notice = document.getElementById('save-notice');
         if (notice) notice.style.display = 'block';
       }
