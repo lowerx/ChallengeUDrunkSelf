@@ -9,7 +9,7 @@ function injectNav() {
   const navHTML = `
     <nav class="nav">
       <div class="nav-container">
-        <a href="index.html" class="nav-logo">Challenge <span>Your Drunk</span> Self</a>
+        <a href="index.html" class="nav-logo">CU<span>DOS</span></a>
 
         <div class="nav-right">
           <ul class="nav-links">
@@ -70,14 +70,15 @@ function updateNavAuth(user) {
       const name = user.user_metadata?.display_name || user.user_metadata?.full_name || user.email.split('@')[0];
       const initials = name.split(' ').map(function(w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
       const displayName = name.split(' ')[0]; // Show first name only in nav
+      const menuId = isMobile ? 'user-menu-mobile' : 'user-menu-desktop';
 
       return `
         <div class="nav-user-wrap">
-          <div class="nav-user" onclick="toggleUserMenu(event)">
+          <div class="nav-user" onclick="toggleUserMenu(event, '${menuId}')">
             <div class="nav-avatar">${initials}</div>
             <span class="nav-username">${displayName}</span>
           </div>
-          <div class="user-menu" id="user-menu">
+          <div class="user-menu" id="${menuId}">
             <a href="app.html" class="user-menu-item">🎮 Play</a>
             <button class="user-menu-item danger" onclick="authSignOut()">Sign out</button>
           </div>
@@ -95,14 +96,18 @@ function updateNavAuth(user) {
   if (navMobileAuth) navMobileAuth.innerHTML = getAuthHTML(true);
 }
 
-function toggleUserMenu(e) {
+function toggleUserMenu(e, menuId) {
   e.stopPropagation();
-  document.getElementById('user-menu')?.classList.toggle('open');
+  // Close any other open menus first
+  document.querySelectorAll('.user-menu').forEach(m => {
+    if (m.id !== menuId) m.classList.remove('open');
+  });
+  document.getElementById(menuId)?.classList.toggle('open');
 }
 
-// Close user menu when clicking outside
+// Close all user menus when clicking outside
 document.addEventListener('click', () => {
-  document.getElementById('user-menu')?.classList.remove('open');
+  document.querySelectorAll('.user-menu').forEach(m => m.classList.remove('open'));
 });
 
 // ─── AUTH MODAL ───────────────────────────────────────────

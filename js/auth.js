@@ -53,10 +53,16 @@ function authSignUp() {
     password: password,
     options: { data: { display_name: name } }
   }).then(function(res) {
-    if (res.error) setAuthMsg(res.error.message, 'error');
-    else {
-      setAuthMsg('Confirmation email sent! Click the link in your email to enable login.', 'success');
-      // No automatic close to ensure they read it
+    if (res.error) {
+      setAuthMsg(res.error.message, 'error');
+    } else {
+      var session = res.data ? res.data.session : null;
+      if (session) {
+        setAuthMsg('Welcome to CUDOS! You are now logged in.', 'success');
+        setTimeout(closeAuthModal, 1500);
+      } else {
+        setAuthMsg('Confirmation email sent! Check your inbox to enable your account.', 'success');
+      }
     }
   });
 }
@@ -90,13 +96,15 @@ function authGoogle() {
   console.log('[Auth] Google attempt');
   if (!sbClient) return;
   
-  // Redirection: always go to app.html in the current folder
-  var dest = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/app.html');
-  console.log('[Auth] Redirecting to Google, return to:', dest);
+  // Detect if we are running locally or on Netlify
+  var isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  var redirectUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/app.html');
+  
+  console.log('[Auth] Redirecting to Google. Return URL:', redirectUrl);
 
   sbClient.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: dest }
+    options: { redirectTo: redirectUrl }
   });
 }
 

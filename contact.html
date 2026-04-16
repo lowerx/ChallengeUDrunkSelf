@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Challenge Your Drunk Self</title>
+  <title>Contact — CUDOS</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
@@ -22,7 +22,7 @@
       Say <em>Hello</em>
     </h1>
     <p class="page-section p" style="font-size:0.875rem; color:var(--muted); margin-top:0.5rem; line-height:1.7;">
-      Got feedback, a bug report, a collaboration idea, or just want to chat about the science?
+      Got feedback, a bug report, or just want to chat about CUDOS?
       I'd love to hear from you.
     </p>
   </div>
@@ -103,8 +103,6 @@
 <script src="js/nav.js"></script>
 <script src="js/auth.js"></script>
 <script>
-// Simple contact form — in production replace this with
-// a Supabase table insert or a service like Formspree/Resend.
 function submitContact() {
   const name    = document.getElementById('cf-name').value.trim();
   const email   = document.getElementById('cf-email').value.trim();
@@ -118,10 +116,6 @@ function submitContact() {
     return;
   }
 
-  // TODO: replace with Supabase insert or Formspree endpoint
-  // e.g. fetch('https://formspree.io/f/YOUR_ID', { method:'POST', body: JSON.stringify({name,email,subject,message}) })
-
-  // For now: simulate success
   msg.textContent = "Message sent! I'll get back to you soon.";
   msg.className   = 'form-msg success';
   document.getElementById('cf-name').value    = '';
@@ -130,7 +124,5 @@ function submitContact() {
   document.getElementById('cf-message').value = '';
 }
 </script>
-<script src="js/nav.js"></script>
-<script src="js/auth.js"></script>
 </body>
 </html>
