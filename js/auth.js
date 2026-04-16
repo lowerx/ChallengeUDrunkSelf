@@ -123,6 +123,7 @@ function saveGameSession(scores, combinedLevel, combinedBadge) {
 
     var row = {
       user_id: user.id,
+      user_name: user.user_metadata?.display_name || user.user_metadata?.full_name || user.email.split('@')[0],
       reaction_avg: scores.reaction ? scores.reaction.avg : null,
       findtom_avg: scores.findtom ? scores.findtom.avg : null,
       stroop_avg: scores.stroop ? scores.stroop.avg : null,

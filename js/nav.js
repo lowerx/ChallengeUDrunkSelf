@@ -15,9 +15,9 @@ function injectNav() {
           <ul class="nav-links">
             <li><a href="index.html" ${isActive('index.html')}>Home</a></li>
             <li><a href="about.html" ${isActive('about.html')}>About</a></li>
+            <li><a href="leaderboard.html" ${isActive('leaderboard.html')}>Leaderboard</a></li>
             <li><a href="contact.html" ${isActive('contact.html')}>Contact</a></li>
           </ul>
-
           <div class="nav-auth" id="nav-auth">
             <button class="nav-btn-login" onclick="openAuthModal('login')">Log in</button>
             <a href="app.html" class="nav-btn-play">Play Now</a>
@@ -34,6 +34,7 @@ function injectNav() {
       <div class="nav-mobile-menu" id="nav-mobile-menu">
         <a href="index.html" ${isActive('index.html')} onclick="toggleMobileMenu()">Home</a>
         <a href="about.html" ${isActive('about.html')} onclick="toggleMobileMenu()">About</a>
+        <a href="leaderboard.html" ${isActive('leaderboard.html')} onclick="toggleMobileMenu()">Leaderboard</a>
         <a href="contact.html" ${isActive('contact.html')} onclick="toggleMobileMenu()">Contact</a>
         <div class="divider"></div>
         <div class="nav-mobile-auth" id="nav-mobile-auth">

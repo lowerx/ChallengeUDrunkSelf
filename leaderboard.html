@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — CUDOS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    .lb-table-wrap {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .lb-table th {
+      background: var(--surface2);
+      color: var(--muted);
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .lb-table td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .lb-table tr:last-child td { border-bottom: none; }
+    
+    .lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--accent); width: 40px; }
+    .lb-user { font-weight: 600; }
+    .lb-score { font-family: 'DM Mono', monospace; color: var(--accent); }
+    .lb-badge { font-size: 0.7rem; }
+
+    .lb-loading {
+      padding: 3rem;
+      text-align: center;
+      color: var(--muted);
+    }
+    
+    .lb-empty {
+      padding: 3rem;
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .lb-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .lb-tab {
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .lb-tab.active {
+      background: var(--accent);
+      color: #0a0a0f;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="page-section" style="margin-top:1.5rem;">
+    <div class="hero-badge" style="display:inline-block; margin-bottom:0.75rem;">Global Rankings</div>
+    <h1 class="hero-title" style="font-size:clamp(2.5rem,10vw,4.5rem);">
+      The <em>Hall</em> of Fame
+    </h1>
+    <p class="page-section p" style="font-size:0.875rem; color:var(--muted); margin-top:0.5rem; line-height:1.7;">
+      See who is the sharpest (or the drunkest) in the room. Rankings are based on the latest sessions.
+    </p>
+  </div>
+
+  <div class="lb-tabs">
+    <div class="lb-tab active" onclick="loadLeaderboard('reaction_avg', 'asc', this)">⚡ Reaction</div>
+    <div class="lb-tab" onclick="loadLeaderboard('findtom_avg', 'asc', this)">👀 Find Tom</div>
+    <div class="lb-tab" onclick="loadLeaderboard('stroop_avg', 'asc', this)">🎨 Color Test</div>
+  </div>
+
+  <div class="lb-table-wrap">
+    <table class="lb-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th>Score</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody id="lb-body">
+        <tr>
+          <td colspan="4" class="lb-loading">Loading rankings...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:2rem; text-align:center;">
+    <a href="app.html" class="btn-hero-primary">Test Your Score</a>
+  </div>
+
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // Leaderboard data loading
+  function loadLeaderboard(column, order, el) {
+    if (el) {
+      document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+    
+    const body = document.getElementById('lb-body');
+    body.innerHTML = '<tr><td colspan="4" class="lb-loading">Loading rankings...</td></tr>';
+
+    if (!window.sbClient) {
+      // Wait for Supabase to be ready
+      setTimeout(() => loadLeaderboard(column, order), 500);
+      return;
+    }
+
+    // Since we don't have a profiles table join yet, we'll try to fetch names from users if we can
+    // BUT in a public leaderboard, we normally can't query auth.users.
+    // For now, let's fetch the sessions and if we find no names, we'll show 'Anonymous'
+    // In a real app, you'd join with a public 'profiles' table.
+    
+    window.sbClient
+      .from('game_sessions')
+      .select('*')
+      .not(column, 'is', null)
+      .order(column, { ascending: order === 'asc' })
+      .limit(20)
+      .then(function(res) {
+        if (res.error) {
+          body.innerHTML = '<tr><td colspan="4" class="lb-empty">Error loading data: ' + res.error.message + '</td></tr>';
+          return;
+        }
+
+        if (!res.data || res.data.length === 0) {
+          body.innerHTML = '<tr><td colspan="4" class="lb-empty">No sessions recorded yet. Be the first!</td></tr>';
+          return;
+        }
+
+        body.innerHTML = '';
+        res.data.forEach((row, i) => {
+          const tr = document.createElement('tr');
+          const scoreStr = column === 'reaction_avg' ? row[column] + 'ms' 
+                        : (row[column] / 1000).toFixed(2) + 's';
+          
+          tr.innerHTML = `
+            <td class="lb-rank">#${i + 1}</td>
+            <td class="lb-user">${row.user_name || 'Anonymous'}</td>
+            <td class="lb-score">${scoreStr}</td>
+            <td class="lb-badge"><span class="level-badge level-${row.combined_level}">${row.combined_badge}</span></td>
+          `;
+          body.appendChild(tr);
+        });
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for auth.js to initialize sbClient
+    setTimeout(() => loadLeaderboard('reaction_avg', 'asc'), 1000);
+  });
+</script>
+</body>
+</html>
