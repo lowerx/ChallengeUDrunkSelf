@@ -327,7 +327,52 @@
 .form-msg.success { display: block; background: rgba(92,245,200,0.1); color: var(--accent3); }
 .form-msg.error   { display: block; background: rgba(255,92,92,0.1); color: var(--accent2); }
 
-/* ─── RESPONSIVE ──────────────────────────────────────────── */
+/* ─── WELCOME ANIMATION ──────────────────────────────────── */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeOut 0.8s ease-in-out 2.2s forwards;
+}
+
+.splash-content {
+  text-align: center;
+  animation: revealUp 1s ease-out forwards;
+}
+
+.splash-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.splash-motto {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+@keyframes revealUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; pointer-events: all; }
+  100% { opacity: 0; pointer-events: none; }
+}
+
+/* Responsive */
 @media (max-width: 560px) {
   .tests-preview    { grid-template-columns: 1fr; }
   .stat-highlights  { grid-template-columns: 1fr 1fr; }

@@ -16,6 +16,22 @@
 </head>
 <body>
 
+<div id="splash" class="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo">CUDOS</div>
+    <div class="splash-motto">Play. React. Know your limit.</div>
+  </div>
+</div>
+
+<script>
+  // Simple check to only show animation once per session
+  if (sessionStorage.getItem('splash_shown')) {
+    document.getElementById('splash').style.display = 'none';
+  } else {
+    sessionStorage.setItem('splash_shown', 'true');
+  }
+</script>
+
 <div class="page">
 
   <section class="hero">
