@@ -55,8 +55,8 @@ function authSignUp() {
   }).then(function(res) {
     if (res.error) setAuthMsg(res.error.message, 'error');
     else {
-      setAuthMsg('Check your email!', 'success');
-      setTimeout(closeAuthModal, 2000);
+      setAuthMsg('Confirmation email sent! Click the link in your email to enable login.', 'success');
+      // No automatic close to ensure they read it
     }
   });
 }

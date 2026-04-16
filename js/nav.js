@@ -66,9 +66,10 @@ function updateNavAuth(user) {
   
   const getAuthHTML = (isMobile) => {
     if (user) {
-      const initials = (user.user_metadata?.display_name || user.email || 'U')
-        .split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-      const displayName = user.user_metadata?.display_name || user.email.split('@')[0];
+      // Handle both manual signup (display_name) and Google (full_name)
+      const name = user.user_metadata?.display_name || user.user_metadata?.full_name || user.email.split('@')[0];
+      const initials = name.split(' ').map(function(w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+      const displayName = name.split(' ')[0]; // Show first name only in nav
 
       return `
         <div class="nav-user-wrap">
