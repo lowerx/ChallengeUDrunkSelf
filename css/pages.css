@@ -417,13 +417,18 @@
 .fake-stat {
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 0.8rem;
-  border-radius: 12px;
+  padding: 0.85rem;
+  border-radius: 14px;
   text-align: left;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.fake-stat:hover { border-color: var(--accent); }
+.fake-stat:hover { 
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200,245,62,0.1);
+}
 
 .fs-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.3rem; font-weight: 600; }
 .fs-val { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--accent3); font-weight: 600; }
