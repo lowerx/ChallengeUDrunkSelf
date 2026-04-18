@@ -372,6 +372,124 @@
   100% { opacity: 0; pointer-events: none; }
 }
 
+/* ─── RESULTS SCREEN ─────────────────────────────────────── */
+.results-main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.score-circle {
+  width: 110px;
+  height: 110px;
+  border: 4px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  box-shadow: 0 0 25px rgba(200,245,62,0.2);
+}
+
+.score-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.verdict-card {
+  background: var(--surface2);
+  border-radius: 16px;
+  padding: 1.25rem;
+  text-align: center;
+  width: 100%;
+  border: 1px solid var(--border);
+}
+
+.verdict-card h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.verdict-sub {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.scientific-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.fake-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.65rem;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.fs-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.2rem; }
+.fs-val { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--accent3); }
+.fs-val.bad { color: var(--accent2); }
+
+.roast-box {
+  font-family: 'DM Mono', monospace;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-align: center;
+  padding: 0.75rem;
+  opacity: 0.85;
+}
+
+.results-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* ─── SHARE CARD DESIGN ──────────────────────────────────── */
+.share-card-design {
+  width: 400px;
+  background: #0a0a0f;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  border: 2px solid #c8f53e;
+  text-align: center;
+  color: white;
+}
+
+.sc-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: #c8f53e; }
+.sc-badge { background: #c8f53e; color: #0a0a0f; padding: 0.5rem 1rem; border-radius: 100px; font-weight: 800; font-size: 1rem; }
+.sc-score { font-family: 'DM Mono', monospace; font-size: 5rem; font-weight: 700; color: white; line-height: 1; }
+.sc-desc { font-size: 1.1rem; opacity: 0.8; }
+.sc-footer { font-family: 'DM Mono', monospace; font-size: 0.8rem; opacity: 0.5; margin-top: 1rem; }
+
 /* Responsive */
 @media (max-width: 560px) {
   .tests-preview    { grid-template-columns: 1fr; }

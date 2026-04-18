@@ -118,35 +118,51 @@ const stroopLevels = [
 // ─── FINAL COMBINED LEVELS ────────────────────────────────
 const finalLevels = [
   {
-    cls: 'level-0', badge: 'Sober as a Judge',
-    verdict: "Are you sure you're at a party?",
-    sub: "All scores are textbook-sober. Either you just arrived, or you're secretly drinking water.",
-    tip: "💧 Keep it up. You're the memory of this night."
+    cls: 'level-0', 
+    badge: 'Scientifically Sober 🧠',
+    verdict: 'Your neurons are firing correctly.',
+    sub: "You're the one explaining things to others right now. Slightly disappointing for a night out.",
+    tip: "You can drink more. You probably will."
   },
   {
-    cls: 'level-1', badge: 'Pleasantly Buzzed',
-    verdict: 'One or two drinks in — nice.',
-    sub: 'Slightly off baseline but very functional. Classic social buzz.',
-    tip: "🍺 One more won't hurt. After that slow down."
+    cls: 'level-1', 
+    badge: 'Buzzed Philosopher 🍷',
+    verdict: 'You feel smarter than usual. You are not.',
+    sub: 'Deep conversations incoming. None will be remembered tomorrow.',
+    tip: "Pace yourself. You’re entering dangerous confidence territory."
   },
   {
-    cls: 'level-2', badge: 'Getting Saucy',
-    verdict: 'Noticeably impaired across tests.',
-    sub: "Reaction, attention, and brain filtering are all showing the effects. Don't drive.",
-    tip: "🥤 Water and food. Now. You're at the regrettable-decisions threshold."
+    cls: 'level-2', 
+    badge: 'Confidently Wrong 😎',
+    verdict: 'Reaction time: questionable. Confidence: extremely high.',
+    sub: 'You would lose an argument with a chair right now.',
+    tip: "Maybe drink water. Or don’t — you won’t listen anyway."
   },
   {
-    cls: 'level-3', badge: 'Properly Drunk',
-    verdict: 'Whoa there.',
-    sub: "Your brain is running on vibes. Impressive you finished all the tests.",
-    tip: '🚰 Full glass of water NOW. Sit somewhere safe.'
+    cls: 'level-3', 
+    badge: 'Walking Experiment 🧪',
+    verdict: 'Motor skills are optional at this point.',
+    sub: "If this were a lab, you'd be the control group for bad decisions.",
+    tip: "Water. Sit down. Re-evaluate life choices."
   },
   {
-    cls: 'level-4', badge: 'How Are You Standing?',
-    verdict: 'Legendary impairment.',
-    sub: "You're a cautionary tale. A charming one.",
-    tip: '🛑 Water. Food. Sit. Handrail for any stairs.'
+    cls: 'level-4', 
+    badge: 'Legally a Liability 🚨',
+    verdict: 'You are operating on vibes, not biology.',
+    sub: 'Memory tomorrow: unavailable. Coordination: theoretical.',
+    tip: "Stop drinking. Find water. Find friends. Find yourself."
   }
+];
+
+const ROASTS = [
+  "You just blinked manually, didn’t you?",
+  "You thought this test was easy. That’s concerning.",
+  "Your future self is already disappointed.",
+  "The prefrontal cortex has left the chat.",
+  "Your coordination is currently a suggestion, not a fact.",
+  "A gold fish has better focus than you right now.",
+  "You are the reason warnings are printed on bottles.",
+  "Calibration error: User is 40% liquid courage."
 ];
 
 // ─── FIND TOM ASSETS ──────────────────────────────────────

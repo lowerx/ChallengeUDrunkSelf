@@ -156,23 +156,60 @@
 
   <!-- ════════ FINAL RESULTS ════════ -->
   <div class="screen" id="screen-results">
-    <div class="logo" style="font-size:1.2rem; color:var(--text)">Your Verdict</div>
-    <div class="level-badge" id="final-badge">---</div>
-    <div class="verdict" id="final-verdict">---</div>
-    <div class="verdict-sub" id="final-sub">---</div>
+    <div class="results-main">
+      <div class="level-badge" id="final-badge" style="font-size: 1.1rem; padding: 0.5rem 1.25rem;">---</div>
+      
+      <div class="score-display">
+        <div class="score-circle">
+          <span id="final-score-pct">0</span>%
+        </div>
+        <p class="score-label">Impairment Level</p>
+      </div>
 
-    <!-- Save notice (shown when logged in) -->
-    <div id="save-notice" style="display:none; font-size:0.7rem; color:var(--accent3); text-align:center;">
-      ✓ Score saved to your account
+      <div class="verdict-card">
+        <h2 id="final-verdict">---</h2>
+        <p class="verdict-sub" id="final-sub">---</p>
+      </div>
+
+      <div class="scientific-stats" id="fake-stats">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="roast-box" id="roast-line">
+        "---"
+      </div>
+
+      <div class="tip-box" id="final-tip">---</div>
     </div>
 
-    <div class="divider"></div>
-    <p class="section-label">Score breakdown</p>
-    <div class="stats-grid" id="final-stats-grid"></div>
-    <div class="tip-box" id="final-tip">---</div>
-    <button class="btn btn-primary" onclick="goHome()">Play Again</button>
-    <button class="btn btn-ghost" onclick="shareResult()">Share Score</button>
-    <p class="science-note" id="final-science">---</p>
+    <div class="results-actions">
+      <button class="btn btn-primary" onclick="goHome()">🔁 Try Again</button>
+      <button class="btn btn-ghost" onclick="shareResult()">📸 Share Card</button>
+      <button class="btn btn-ghost" onclick="openDetailsModal()" style="font-size: 0.7rem; opacity: 0.7;">📊 View Exact Metrics</button>
+    </div>
+    
+    <p class="science-note" id="final-science" style="margin-top: 1rem;">---</p>
+  </div>
+
+  <!-- ════════ DETAILS MODAL ════════ -->
+  <div class="auth-overlay" id="details-overlay" onclick="if(event.target===this) closeDetailsModal()">
+    <div class="auth-modal" style="max-width: 340px;">
+      <button class="auth-close" onclick="closeDetailsModal()">✕</button>
+      <div class="auth-title">Raw Data</div>
+      <p class="auth-sub">Your exact performance metrics per test.</p>
+      <div id="exact-metrics-grid" class="stats-grid" style="margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <!-- ════════ HIDDEN SHARE CARD (for canvas/screenshots) ════════ -->
+  <div id="share-card-wrap" style="position:fixed; left:-9999px;">
+    <div id="share-card" class="share-card-design">
+      <div class="sc-logo">CUDOS</div>
+      <div class="sc-badge" id="sc-badge">---</div>
+      <div class="sc-score"><span id="sc-score-pct">0</span>%</div>
+      <div class="sc-desc" id="sc-desc">---</div>
+      <div class="sc-footer">cudos.netlify.app</div>
+    </div>
   </div>
 
 </div><!-- /game-inner -->

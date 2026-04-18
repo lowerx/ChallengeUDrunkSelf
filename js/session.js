@@ -3,46 +3,32 @@ let selectedTests    = ['reaction', 'findtom', 'stroop', 'memory'];
 let testQueue        = [];
 let currentTestIndex = 0;
 let scores           = {};
-// scores shape: {
-//   reaction: { avg: ms, times: [] },
-//   findtom:  { avg: ms, times: [] },
-//   stroop:   { avg: ms, times: [], errors: n },
-//   memory:   { level: n, avg: n }
-// }
 
 // ─── NAVIGATION ───────────────────────────────────────────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
 function goHome() {
-  scores           = {};
-  testQueue        = [];
-  currentTestIndex = 0;
-  showScreen('screen-intro');
-}
-
-// ─── TEST SELECTION ───────────────────────────────────────
-function toggleTest(key) {
-  const idx = selectedTests.indexOf(key);
-  const el  = document.getElementById('card-' + key);
-  if (idx > -1) {
-    if (selectedTests.length === 1) return;
-    selectedTests.splice(idx, 1);
-    el.classList.remove('selected');
-  } else {
-    selectedTests.push(key);
-    el.classList.add('selected');
-  }
+  location.reload(); 
 }
 
 // ─── SESSION FLOW ─────────────────────────────────────────
 function startSession() {
-  scores           = {};
-  testQueue        = [...selectedTests];
+  testQueue = selectedTests.filter(t => {
+    const card = document.getElementById('card-' + t);
+    return card && card.classList.contains('selected');
+  });
+
+  if (testQueue.length === 0) {
+    alert('Please select at least one test.');
+    return;
+  }
+
   currentTestIndex = 0;
+  scores = {};
   launchCountdown(testQueue[0]);
 }
 
@@ -81,8 +67,12 @@ function launchTest(key) {
 function onTestComplete(key, result) {
   scores[key] = result;
   currentTestIndex++;
-  if (currentTestIndex < testQueue.length) showMidResults(key, result);
-  else showFinalResults();
+
+  if (currentTestIndex < testQueue.length) {
+    showMidResults(key, result);
+  } else {
+    showFinalResults();
+  }
 }
 
 function startNextTest() {
@@ -120,96 +110,112 @@ function showMidResults(key, result) {
 // ─── FINAL RESULTS ────────────────────────────────────────
 function showFinalResults() {
   let totalNorm = 0, count = 0;
-  const statsHTML = [];
+  const metricsHTML = [];
+
+  // Helper to add metric
+  const addMetric = (label, val, color) => {
+    metricsHTML.push(`
+      <div class="stat-box">
+        <div class="stat-val" style="color:${color || 'var(--text)'}">${val}</div>
+        <div class="stat-label">${label}</div>
+      </div>
+    `);
+  };
 
   if (scores.reaction) {
     const lvIdx = rtLevels.indexOf(getLevel(scores.reaction.avg, rtLevels));
     totalNorm += lvIdx; count++;
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val" style="color:var(--accent)">${scores.reaction.avg} ms</div>
-      <div class="stat-label">Reaction avg</div>
-    </div>`);
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val">${Math.min(...scores.reaction.times)} ms</div>
-      <div class="stat-label">Best tap</div>
-    </div>`);
+    addMetric('Reaction', scores.reaction.avg + 'ms', 'var(--accent)');
   }
-
   if (scores.findtom) {
     const lvIdx = ftLevels.indexOf(getLevel(scores.findtom.avg, ftLevels));
     totalNorm += lvIdx; count++;
-    const hits = scores.findtom.times.filter(t => t < 6000).length;
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val" style="color:var(--accent3)">${(scores.findtom.avg / 1000).toFixed(1)}s</div>
-      <div class="stat-label">Find Tom avg</div>
-    </div>`);
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val">${hits}/${FT_ROUNDS}</div>
-      <div class="stat-label">Tom found</div>
-    </div>`);
+    addMetric('Attention', (scores.findtom.avg / 1000).toFixed(1) + 's', 'var(--accent3)');
   }
-
   if (scores.stroop) {
     const lvIdx = stroopLevels.indexOf(getLevel(scores.stroop.avg, stroopLevels));
     totalNorm += lvIdx; count++;
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val" style="color:#f55cf0">${(scores.stroop.avg / 1000).toFixed(2)}s</div>
-      <div class="stat-label">Color test avg</div>
-    </div>`);
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val">${scores.stroop.errors} error${scores.stroop.errors !== 1 ? 's' : ''}</div>
-      <div class="stat-label">Wrong taps</div>
-    </div>`);
+    addMetric('Filtering', (scores.stroop.avg / 1000).toFixed(2) + 's', '#f55cf0');
   }
-
   if (scores.memory) {
     const lvIdx = memoryLevels.indexOf(getLevel(scores.memory.level, memoryLevels));
     totalNorm += lvIdx; count++;
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val" style="color:var(--accent)">Level ${scores.memory.level}</div>
-      <div class="stat-label">Memory reached</div>
-    </div>`);
-    statsHTML.push(`<div class="stat-box">
-      <div class="stat-val">${scores.memory.level >= 7 ? 'Miller-Safe' : 'Impaired'}</div>
-      <div class="stat-label">Recall state</div>
-    </div>`);
+    addMetric('Memory', 'Lvl ' + scores.memory.level, 'var(--accent)');
   }
 
   const avgLvlIdx = count > 0 ? Math.round(totalNorm / count) : 0;
   const lv        = finalLevels[Math.min(avgLvlIdx, finalLevels.length - 1)];
+  
+  // Calculate a visual % (0-100)
+  // Level 0 = 0-20%, Level 4 = 80-100%
+  const finalScorePct = Math.min(100, Math.max(0, (avgLvlIdx * 20) + Math.floor(Math.random() * 15)));
 
-  // Science note from whichever test is most relevant
-  const sciTable  = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
-  const sciNote   = sciTable[Math.min(avgLvlIdx, 4)].sci;
-
+  // Populate Main UI
   document.getElementById('final-badge').textContent    = lv.badge;
   document.getElementById('final-badge').className      = 'level-badge ' + lv.cls;
+  document.getElementById('final-score-pct').textContent = finalScorePct;
   document.getElementById('final-verdict').textContent  = lv.verdict;
   document.getElementById('final-sub').textContent      = lv.sub;
-  document.getElementById('final-stats-grid').innerHTML = statsHTML.join('');
-  document.getElementById('final-tip').innerHTML        = '<strong>Tip:</strong> ' + lv.tip.slice(2).trim();
-  document.getElementById('final-science').textContent  = sciNote;
+  document.getElementById('final-tip').textContent      = lv.tip;
 
-  // Save to Supabase if logged in
-  if (typeof saveGameSession === 'function') {
-    document.getElementById('save-notice').style.display = 'none';
-    saveGameSession(scores, avgLvlIdx, lv.badge);
+  // Fake Scientific Stats
+  const fakeStats = [
+    { l: 'Motor Response', v: '+' + (avgLvlIdx * 24 + 5) + '% delay', b: avgLvlIdx > 1 },
+    { l: 'Coordination', v: avgLvlIdx > 2 ? 'Unstable' : avgLvlIdx > 0 ? 'Degraded' : 'Nominal', b: avgLvlIdx > 1 },
+    { l: 'Decision Making', v: avgLvlIdx > 2 ? 'Compromised' : 'Functional', b: avgLvlIdx > 2 },
+    { l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
+  ];
+  document.getElementById('fake-stats').innerHTML = fakeStats.map(s => `
+    <div class="fake-stat">
+      <div class="fs-label">${s.l}</div>
+      <div class="fs-val ${s.b ? 'bad' : ''}">${s.v}</div>
+    </div>
+  `).join('');
+
+  // Roast Line
+  const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
+  document.getElementById('roast-line').textContent = `"${roast}"`;
+
+  // Detailed Modal
+  document.getElementById('exact-metrics-grid').innerHTML = metricsHTML.join('');
+
+  // Science Note
+  const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
+  document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
+
+  // Prepare Share Card
+  document.getElementById('sc-badge').textContent = lv.badge;
+  document.getElementById('sc-score-pct').textContent = finalScorePct;
+  document.getElementById('sc-desc').textContent = lv.verdict;
+
+  // Save to Supabase
+  if (typeof window.saveGameSession === 'function') {
+    window.saveGameSession(scores, avgLvlIdx, lv.badge);
   }
 
   showScreen('screen-results');
 }
 
+function openDetailsModal() {
+  document.getElementById('details-overlay').classList.add('open');
+}
+function closeDetailsModal() {
+  document.getElementById('details-overlay').classList.remove('open');
+}
+
 // ─── SHARE ────────────────────────────────────────────────
 function shareResult() {
   const badge = document.getElementById('final-badge').textContent;
-  const parts = [];
-  if (scores.reaction) parts.push('⚡ ' + scores.reaction.avg + 'ms reaction');
-  if (scores.findtom)  parts.push('👀 ' + (scores.findtom.avg / 1000).toFixed(1) + 's to find Tom');
-  if (scores.stroop)   parts.push('🎨 ' + (scores.stroop.avg / 1000).toFixed(2) + 's color test');
-  const text = '🎮 "' + badge + '"\n' + parts.join(' · ') + '\nChallenge Your Drunk Self';
+  const score = document.getElementById('final-score-pct').textContent;
+  const verdict = document.getElementById('final-verdict').textContent;
+  
+  const text = `🍻 CUDOS RESULT\n\nLevel: ${badge}\nScore: ${score}%\n\n"${verdict}"\n\nTry it yourself ↓\nhttps://cudos.netlify.app`;
 
-  if (navigator.share)           navigator.share({ title: 'Challenge Your Drunk Self', text });
-  else if (navigator.clipboard)  navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
+  if (navigator.share) {
+    navigator.share({ title: 'CUDOS Result', text });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => alert('Result copied to clipboard! Screenshot this page to share the card!'));
+  }
 }
 
 // ─── SHARED UI HELPER ─────────────────────────────────────
@@ -221,4 +227,9 @@ function buildProgress(containerId, done, total) {
     d.className = 'prog-dot' + (i < done ? ' done' : i === done ? ' active' : '');
     el.appendChild(d);
   }
+}
+
+function toggleTest(key) {
+  const card = document.getElementById('card-' + key);
+  card.classList.toggle('selected');
 }
