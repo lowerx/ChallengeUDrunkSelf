@@ -148,8 +148,22 @@ function showFinalResults() {
   const finalScorePct = Math.min(100, Math.max(0, (avgLvlIdx * 20) + Math.floor(Math.random() * 15)));
 
   // 1. Main UI Update
-  document.getElementById('final-badge').textContent    = lv.badge;
-  document.getElementById('final-badge').className      = 'level-badge ' + lv.cls;
+  const badgeEl = document.getElementById('final-badge');
+  badgeEl.textContent = lv.badge;
+  badgeEl.className = 'level-badge ' + lv.cls;
+  // Inject badge styles to bypass cache
+  badgeEl.style.cssText = "display:inline-block; padding:0.5rem 1.25rem; border-radius:100px; font-weight:800; font-size:0.8rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:1rem;";
+  if (lv.cls === 'level-0') badgeEl.style.background = "rgba(92,245,200,0.2)";
+  else if (lv.cls === 'level-1') badgeEl.style.background = "rgba(200,245,62,0.2)";
+  else if (lv.cls === 'level-2') badgeEl.style.background = "rgba(255,180,50,0.2)";
+  else if (lv.cls === 'level-3') badgeEl.style.background = "rgba(255,100,50,0.2)";
+  else badgeEl.style.background = "rgba(255,60,60,0.2)";
+
+  const scoreCircle = document.querySelector('.score-circle');
+  if (scoreCircle) {
+    scoreCircle.style.cssText = "width:120px; height:120px; border:4px solid var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:2.5rem; font-weight:700; color:var(--accent); box-shadow:0 0 30px rgba(200,245,62,0.2); margin:1rem auto;";
+  }
+
   document.getElementById('final-score-pct').textContent = finalScorePct;
   document.getElementById('final-verdict').textContent  = lv.badge;
   document.getElementById('final-sub').textContent      = lv.verdict;
