@@ -151,7 +151,6 @@ function showFinalResults() {
   const badgeEl = document.getElementById('final-badge');
   badgeEl.textContent = lv.badge;
   badgeEl.className = 'level-badge ' + lv.cls;
-  // Inject badge styles to bypass cache
   badgeEl.style.cssText = "display:inline-block; padding:0.5rem 1.25rem; border-radius:100px; font-weight:800; font-size:0.8rem; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:1rem;";
   if (lv.cls === 'level-0') badgeEl.style.background = "rgba(92,245,200,0.2)";
   else if (lv.cls === 'level-1') badgeEl.style.background = "rgba(200,245,62,0.2)";
@@ -201,14 +200,26 @@ function showFinalResults() {
   const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
-  // 6. Share Card Population - WITH ICONS
-  document.getElementById('sc-badge').textContent = lv.badge;
+  // 6. Share Card Population - WITH INJECTED STYLES
+  const scTarget = document.getElementById('share-card-target');
+  scTarget.style.cssText = "width:100%; background:#0a0a0f; padding:2rem; display:flex; flex-direction:column; gap:1.5rem; border:2px solid #c8f53e; border-radius:20px; text-align:center; color:white; box-sizing:border-box; box-shadow:0 10px 40px rgba(0,0,0,0.5);";
+
+  const scBadge = document.getElementById('sc-badge');
+  scBadge.textContent = lv.badge;
+  scBadge.style.cssText = "background:#c8f53e; color:#0a0a0f; padding:0.35rem 0.9rem; border-radius:100px; font-weight:800; font-size:0.8rem; text-transform:uppercase;";
+
   document.getElementById('sc-score-pct').textContent = finalScorePct;
-  document.getElementById('sc-desc').textContent = lv.verdict;
-  document.getElementById('sc-roast').textContent = `"${roast}"`;
+  
+  const scDesc = document.getElementById('sc-desc');
+  scDesc.textContent = lv.verdict;
+  scDesc.style.cssText = "font-size:1.4rem; font-weight:800; color:white; line-height:1.2; text-transform:uppercase; letter-spacing:-0.02em; margin-bottom:0.25rem;";
+
+  const scRoast = document.getElementById('sc-roast');
+  scRoast.textContent = `"${roast}"`;
+  scRoast.style.cssText = "font-style:italic; font-size:1rem; color:#c8f53e; opacity:0.9; padding:1rem; background:rgba(200,245,62,0.1); border-radius:12px; border:1px solid rgba(200,245,62,0.2); line-height:1.4;";
   
   const scStatsHTML = fakeStats.map(s => `
-    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:center; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.85rem; border-radius:12px; text-align:center; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
       <div style="font-size:1.2rem; margin-bottom:0.25rem;">${s.i}</div>
       <div class="scs-label" style="font-size:0.55rem; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
       <div class="scs-val" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:white; font-weight:600;">${s.v}</div>
