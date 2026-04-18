@@ -1,12 +1,13 @@
 // ─── SESSION STATE ────────────────────────────────────────
-let selectedTests    = ['reaction', 'findtom', 'stroop'];
+let selectedTests    = ['reaction', 'findtom', 'stroop', 'memory'];
 let testQueue        = [];
 let currentTestIndex = 0;
 let scores           = {};
 // scores shape: {
 //   reaction: { avg: ms, times: [] },
 //   findtom:  { avg: ms, times: [] },
-//   stroop:   { avg: ms, times: [], errors: n }
+//   stroop:   { avg: ms, times: [], errors: n },
+//   memory:   { level: n, avg: n }
 // }
 
 // ─── NAVIGATION ───────────────────────────────────────────
@@ -49,7 +50,8 @@ function launchCountdown(key) {
   const labels = {
     reaction: '⚡ Reaction Time — Get Ready',
     findtom:  '👀 Find Tom — Get Ready',
-    stroop:   '🎨 Color Test — Get Ready'
+    stroop:   '🎨 Color Test — Get Ready',
+    memory:   '🧠 Memory Test — Get Ready'
   };
   document.getElementById('countdown-label').textContent = labels[key] || 'Get ready...';
   document.getElementById('countdown-num').textContent   = '3';
@@ -72,6 +74,7 @@ function launchTest(key) {
   if      (key === 'reaction') startReactionTest();
   else if (key === 'findtom')  startFindTomTest();
   else if (key === 'stroop')   startStroopTest();
+  else if (key === 'memory')   startMemoryTest();
 }
 
 // Called by each test module when complete
@@ -88,12 +91,13 @@ function startNextTest() {
 
 // ─── MID-TEST RESULTS ─────────────────────────────────────
 function showMidResults(key, result) {
-  const tableMap = { reaction: rtLevels, findtom: ftLevels, stroop: stroopLevels };
+  const tableMap = { reaction: rtLevels, findtom: ftLevels, stroop: stroopLevels, memory: memoryLevels };
   const table    = tableMap[key];
   const lv       = getLevel(result.avg, table);
 
   const scoreStr = key === 'reaction' ? result.avg + ' ms avg'
                  : key === 'findtom'  ? (result.avg / 1000).toFixed(1) + 's avg'
+                 : key === 'memory'   ? 'Level ' + result.level
                  :                      (result.avg / 1000).toFixed(2) + 's avg';
 
   document.getElementById('mid-badge').textContent  = lv.badge;
@@ -105,7 +109,8 @@ function showMidResults(key, result) {
   const nextLabels = {
     reaction: '⚡ Next: Reaction Time →',
     findtom:  '👀 Next: Find Tom →',
-    stroop:   '🎨 Next: Color Test →'
+    stroop:   '🎨 Next: Color Test →',
+    memory:   '🧠 Next: Memory Test →'
   };
   document.getElementById('mid-next-btn').textContent = nextLabels[nextKey] || 'Next Test →';
 
@@ -157,11 +162,24 @@ function showFinalResults() {
     </div>`);
   }
 
+  if (scores.memory) {
+    const lvIdx = memoryLevels.indexOf(getLevel(scores.memory.level, memoryLevels));
+    totalNorm += lvIdx; count++;
+    statsHTML.push(`<div class="stat-box">
+      <div class="stat-val" style="color:var(--accent)">Level ${scores.memory.level}</div>
+      <div class="stat-label">Memory reached</div>
+    </div>`);
+    statsHTML.push(`<div class="stat-box">
+      <div class="stat-val">${scores.memory.level >= 7 ? 'Miller-Safe' : 'Impaired'}</div>
+      <div class="stat-label">Recall state</div>
+    </div>`);
+  }
+
   const avgLvlIdx = count > 0 ? Math.round(totalNorm / count) : 0;
   const lv        = finalLevels[Math.min(avgLvlIdx, finalLevels.length - 1)];
 
   // Science note from whichever test is most relevant
-  const sciTable  = scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
+  const sciTable  = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   const sciNote   = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
   document.getElementById('final-badge').textContent    = lv.badge;

@@ -128,6 +128,7 @@ function saveGameSession(scores, combinedLevel, combinedBadge) {
       findtom_avg: scores.findtom ? scores.findtom.avg : null,
       stroop_avg: scores.stroop ? scores.stroop.avg : null,
       stroop_errors: scores.stroop ? scores.stroop.errors : null,
+      memory_level: scores.memory ? scores.memory.level : null,
       combined_level: combinedLevel,
       combined_badge: combinedBadge
     };

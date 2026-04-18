@@ -1,0 +1,60 @@
+/* ─── MEMORY TEST GRID ───────────────────────────────────── */
+.mem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+  margin: 1.5rem auto;
+}
+
+.mem-tile {
+  aspect-ratio: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.mem-tile:active {
+  transform: scale(0.95);
+}
+
+/* Active/Showing state */
+.mem-tile.active {
+  background: var(--accent);
+  box-shadow: 0 0 20px var(--accent);
+  border-color: var(--accent);
+}
+
+/* Feedback states */
+.mem-tile.correct {
+  background: var(--accent3);
+  box-shadow: 0 0 15px var(--accent3);
+  border-color: var(--accent3);
+}
+
+.mem-tile.wrong {
+  background: var(--accent2);
+  box-shadow: 0 0 15px var(--accent2);
+  border-color: var(--accent2);
+}
+
+.mem-instruction {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  min-height: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.mem-instruction strong {
+  color: var(--text);
+}
+
+/* Disabled state during sequence showing */
+.mem-grid.locked .mem-tile {
+  cursor: default;
+}

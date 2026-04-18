@@ -179,7 +179,51 @@ const STROOP_COLORS = [
   { name: 'ORANGE', hex: '#f5a55c' },
 ];
 
+// ─── MEMORY TEST LEVELS ───────────────────────────────────
+// Score = highest level reached (sequence length)
+const memoryLevels = [
+  {
+    minLevel: 7, cls: 'level-0', badge: 'Perfect Recall',
+    verdict: 'Memory is sharp.',
+    sub: 'Your short-term memory is firing on all cylinders. No alcohol interference here.',
+    tip: '💧 Keep it steady. Your brain is still in the game.',
+    sci: 'Working memory capacity (Miller\'s Law) is typically 7 ± 2 items.'
+  },
+  {
+    minLevel: 5, cls: 'level-1', badge: 'Slightly Foggy',
+    verdict: 'Good, but not perfect.',
+    sub: 'You missed a beat. Short-term retention is starting to dip slightly.',
+    tip: '🍺 Enjoy the buzz, but maybe skip the next round of shots.',
+    sci: 'BAC 0.05% begins to disrupt the encoding of new short-term memories.'
+  },
+  {
+    minLevel: 4, cls: 'level-2', badge: 'Memory Leak',
+    verdict: 'Noticeable forgetfulness.',
+    sub: 'Your brain is struggling to hold onto the sequence. Impairment is visible.',
+    tip: '🥤 Time for a non-alcoholic drink. Your brain needs a break.',
+    sci: 'Alcohol significantly reduces working memory capacity as BAC reaches 0.08%.'
+  },
+  {
+    minLevel: 3, cls: 'level-3', badge: 'Short-Circuit',
+    verdict: 'Where was I?',
+    sub: 'Encoding sequences is becoming very difficult. Vibing > Thinking.',
+    tip: '🚰 Drink water now. You won\'t remember much of this tomorrow.',
+    sci: 'Significant memory impairment occurs at BAC 0.10% due to hippocampal suppression.'
+  },
+  {
+    minLevel: 0, cls: 'level-4', badge: 'Total Blackout',
+    verdict: 'Memory is offline.',
+    sub: 'The sequence never stood a chance. You are heavily impaired.',
+    tip: '🛑 Stop drinking. Sit down and stay safe.',
+    sci: 'High BAC levels (0.15%+) can cause "fragmentary blackouts" or total memory loss.'
+  }
+];
+
 // ─── HELPER ───────────────────────────────────────────────
 function getLevel(ms, table) {
+  // Check if it's the memory table (uses minLevel instead of maxMs)
+  if (table === memoryLevels) {
+    return table.find(l => ms >= l.minLevel);
+  }
   return table.find(l => ms <= l.maxMs);
 }

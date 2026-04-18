@@ -101,6 +101,7 @@
     <div class="lb-tab active" onclick="loadLeaderboard('reaction_avg', 'asc', this)">⚡ Reaction</div>
     <div class="lb-tab" onclick="loadLeaderboard('findtom_avg', 'asc', this)">👀 Find Tom</div>
     <div class="lb-tab" onclick="loadLeaderboard('stroop_avg', 'asc', this)">🎨 Color Test</div>
+    <div class="lb-tab" onclick="loadLeaderboard('memory_level', 'desc', this)">🧠 Memory</div>
   </div>
 
   <div class="lb-table-wrap">
@@ -171,8 +172,15 @@
         body.innerHTML = '';
         res.data.forEach((row, i) => {
           const tr = document.createElement('tr');
-          const scoreStr = column === 'reaction_avg' ? row[column] + 'ms' 
-                        : (row[column] / 1000).toFixed(2) + 's';
+          let scoreStr = '';
+          
+          if (column === 'reaction_avg') {
+            scoreStr = row[column] + 'ms';
+          } else if (column === 'memory_level') {
+            scoreStr = 'Level ' + row[column];
+          } else {
+            scoreStr = (row[column] / 1000).toFixed(2) + 's';
+          }
           
           tr.innerHTML = `
             <td class="lb-rank">#${i + 1}</td>

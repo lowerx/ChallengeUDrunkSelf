@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/reaction.css">
   <link rel="stylesheet" href="css/findtom.css">
   <link rel="stylesheet" href="css/stroop.css">
+  <link rel="stylesheet" href="css/memory.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/auth.css">
   <!-- Supabase JS SDK -->
@@ -59,6 +60,11 @@
           <div class="icon">🎨</div>
           <div class="tname">Color Test</div>
           <div class="tdesc">Tap ink color · 5 rounds</div>
+        </div>
+        <div class="test-card selected" id="card-memory" onclick="toggleTest('memory')">
+          <div class="icon">🧠</div>
+          <div class="tname">Memory</div>
+          <div class="tdesc">Repeat pattern · Infinite</div>
         </div>
       </div>
       <p style="font-size:0.62rem; color:var(--muted); text-align:center;">Tap a card to toggle on/off</p>
@@ -119,6 +125,24 @@
     <div class="stroop-accuracy" id="stroop-accuracy"></div>
   </div>
 
+  <!-- ════════ MEMORY TEST ════════ -->
+  <div class="screen" id="screen-memory">
+    <div class="tagline" style="letter-spacing:0.1em;">🧠 MEMORY TEST</div>
+    <div class="round-label" id="mem-level-label">Level 1</div>
+    <div class="mem-instruction" id="mem-instr">Watch the sequence...</div>
+    <div class="mem-grid" id="mem-grid">
+      <div class="mem-tile" data-idx="0"></div>
+      <div class="mem-tile" data-idx="1"></div>
+      <div class="mem-tile" data-idx="2"></div>
+      <div class="mem-tile" data-idx="3"></div>
+      <div class="mem-tile" data-idx="4"></div>
+      <div class="mem-tile" data-idx="5"></div>
+      <div class="mem-tile" data-idx="6"></div>
+      <div class="mem-tile" data-idx="7"></div>
+      <div class="mem-tile" data-idx="8"></div>
+    </div>
+  </div>
+
   <!-- ════════ MID-TEST RESULTS ════════ -->
   <div class="screen" id="screen-mid">
     <div class="logo" style="font-size:1.2rem;">Test Complete!</div>
@@ -159,6 +183,7 @@
 <script src="js/reaction.js"></script>
 <script src="js/findtom.js"></script>
 <script src="js/stroop.js"></script>
+<script src="js/memory.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/auth.js"></script>
 </body>
