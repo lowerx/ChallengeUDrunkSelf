@@ -146,19 +146,17 @@ function showFinalResults() {
   const avgLvlIdx = count > 0 ? Math.round(totalNorm / count) : 0;
   const lv        = finalLevels[Math.min(avgLvlIdx, finalLevels.length - 1)];
   
-  // Calculate a visual % (0-100)
-  // Level 0 = 0-20%, Level 4 = 80-100%
   const finalScorePct = Math.min(100, Math.max(0, (avgLvlIdx * 20) + Math.floor(Math.random() * 15)));
 
-  // Populate Main UI
+  // 1. Main UI Update
   document.getElementById('final-badge').textContent    = lv.badge;
   document.getElementById('final-badge').className      = 'level-badge ' + lv.cls;
   document.getElementById('final-score-pct').textContent = finalScorePct;
-  document.getElementById('final-verdict').textContent  = lv.verdict;
-  document.getElementById('final-sub').textContent      = lv.sub;
+  document.getElementById('final-verdict').textContent  = lv.badge; // Use badge as title
+  document.getElementById('final-sub').textContent      = lv.verdict; // Use verdict as subtext
   document.getElementById('final-tip').textContent      = lv.tip;
 
-  // Fake Scientific Stats
+  // 2. Fake Stats
   const fakeStats = [
     { l: 'Motor Response', v: '+' + (avgLvlIdx * 24 + 5) + '% delay', b: avgLvlIdx > 1 },
     { l: 'Coordination', v: avgLvlIdx > 2 ? 'Unstable' : avgLvlIdx > 0 ? 'Degraded' : 'Nominal', b: avgLvlIdx > 1 },
@@ -172,23 +170,24 @@ function showFinalResults() {
     </div>
   `).join('');
 
-  // Roast Line
+  // 3. Roast
   const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
   document.getElementById('roast-line').textContent = `"${roast}"`;
 
-  // Detailed Modal
+  // 4. Modal Data
   document.getElementById('exact-metrics-grid').innerHTML = metricsHTML.join('');
 
-  // Science Note
+  // 5. Science Note
   const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
-  // Prepare Share Card
+  // 6. Share Card Population
   document.getElementById('sc-badge').textContent = lv.badge;
   document.getElementById('sc-score-pct').textContent = finalScorePct;
   document.getElementById('sc-desc').textContent = lv.verdict;
+  document.getElementById('sc-roast').textContent = `"${roast}"`;
 
-  // Save to Supabase
+  // Save
   if (typeof window.saveGameSession === 'function') {
     window.saveGameSession(scores, avgLvlIdx, lv.badge);
   }
@@ -196,25 +195,22 @@ function showFinalResults() {
   showScreen('screen-results');
 }
 
-function openDetailsModal() {
-  document.getElementById('details-overlay').classList.add('open');
-}
-function closeDetailsModal() {
-  document.getElementById('details-overlay').classList.remove('open');
-}
+// ─── MODALS ───────────────────────────────────────────────
+function openDetailsModal() { document.getElementById('details-overlay').classList.add('open'); }
+function closeDetailsModal() { document.getElementById('details-overlay').classList.remove('open'); }
 
-// ─── SHARE ────────────────────────────────────────────────
-function shareResult() {
+function openShareModal() { document.getElementById('share-overlay').classList.add('open'); }
+function closeShareModal() { document.getElementById('share-overlay').classList.remove('open'); }
+
+function copyShareText() {
   const badge = document.getElementById('final-badge').textContent;
   const score = document.getElementById('final-score-pct').textContent;
-  const verdict = document.getElementById('final-verdict').textContent;
+  const text = `🍻 CUDOS RESULT\nLevel: ${badge}\nScore: ${score}%\n\nTest your focus ↓\nhttps://cudos.netlify.app`;
   
-  const text = `🍻 CUDOS RESULT\n\nLevel: ${badge}\nScore: ${score}%\n\n"${verdict}"\n\nTry it yourself ↓\nhttps://cudos.netlify.app`;
-
-  if (navigator.share) {
-    navigator.share({ title: 'CUDOS Result', text });
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => alert('Result copied to clipboard! Screenshot this page to share the card!'));
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Link copied to clipboard! Share it with your friends.');
+    });
   }
 }
 

@@ -184,7 +184,7 @@
 
     <div class="results-actions">
       <button class="btn btn-primary" onclick="goHome()">🔁 Try Again</button>
-      <button class="btn btn-ghost" onclick="shareResult()">📸 Share Card</button>
+      <button class="btn btn-ghost" onclick="openShareModal()">📸 Share Card</button>
       <button class="btn btn-ghost" onclick="openDetailsModal()" style="font-size: 0.7rem; opacity: 0.7;">📊 View Exact Metrics</button>
     </div>
     
@@ -201,14 +201,42 @@
     </div>
   </div>
 
-  <!-- ════════ HIDDEN SHARE CARD (for canvas/screenshots) ════════ -->
-  <div id="share-card-wrap" style="position:fixed; left:-9999px;">
-    <div id="share-card" class="share-card-design">
-      <div class="sc-logo">CUDOS</div>
-      <div class="sc-badge" id="sc-badge">---</div>
-      <div class="sc-score"><span id="sc-score-pct">0</span>%</div>
-      <div class="sc-desc" id="sc-desc">---</div>
-      <div class="sc-footer">cudos.netlify.app</div>
+  <!-- ════════ SHARE CARD MODAL ════════ -->
+  <div class="auth-overlay" id="share-overlay" onclick="if(event.target===this) closeShareModal()">
+    <div class="auth-modal share-modal-inner">
+      <button class="auth-close" onclick="closeShareModal()">✕</button>
+      
+      <div id="share-card-target" class="share-card-design">
+        <div class="sc-header">
+          <div class="sc-logo">CU<span>DOS</span></div>
+          <div class="sc-badge-tag" id="sc-badge">---</div>
+        </div>
+        
+        <div class="sc-main">
+          <div class="sc-score-wrap">
+            <span class="sc-score-num" id="sc-score-pct">0</span>
+            <span class="sc-score-unit">%</span>
+          </div>
+          <div class="sc-label">IMPAIRMENT</div>
+        </div>
+
+        <div class="sc-body">
+          <div class="sc-verdict" id="sc-desc">---</div>
+          <div class="sc-quote" id="sc-roast">---</div>
+        </div>
+
+        <div class="sc-footer">
+          <div class="sc-url">cudos.netlify.app</div>
+          <div class="sc-tagline">Play. React. Know your limit.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; width: 100%;">
+        <button class="btn btn-primary" onclick="copyShareText()" style="width: 100%;">🔗 Copy Share Link</button>
+        <p style="font-size: 0.7rem; color: var(--muted); text-align: center; margin-top: 0.75rem;">
+          Take a screenshot to share the card!
+        </p>
+      </div>
     </div>
   </div>
 
