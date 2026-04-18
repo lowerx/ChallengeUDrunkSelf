@@ -145,18 +145,17 @@ function showFinalResults() {
 
   const avgLvlIdx = count > 0 ? Math.round(totalNorm / count) : 0;
   const lv        = finalLevels[Math.min(avgLvlIdx, finalLevels.length - 1)];
-  
   const finalScorePct = Math.min(100, Math.max(0, (avgLvlIdx * 20) + Math.floor(Math.random() * 15)));
 
   // 1. Main UI Update
   document.getElementById('final-badge').textContent    = lv.badge;
   document.getElementById('final-badge').className      = 'level-badge ' + lv.cls;
   document.getElementById('final-score-pct').textContent = finalScorePct;
-  document.getElementById('final-verdict').textContent  = lv.badge; // Use badge as title
-  document.getElementById('final-sub').textContent      = lv.verdict; // Use verdict as subtext
+  document.getElementById('final-verdict').textContent  = lv.badge;
+  document.getElementById('final-sub').textContent      = lv.verdict;
   document.getElementById('final-tip').textContent      = lv.tip;
 
-  // 2. Fake Stats
+  // 2. Fake Stats - FORCE 2x2 GRID
   const fakeStats = [
     { l: 'Motor Response', v: '+' + (avgLvlIdx * 24 + 5) + '% delay', b: avgLvlIdx > 1 },
     { l: 'Coordination', v: avgLvlIdx > 2 ? 'Unstable' : avgLvlIdx > 0 ? 'Degraded' : 'Nominal', b: avgLvlIdx > 1 },
@@ -164,16 +163,17 @@ function showFinalResults() {
     { l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
   ];
 
-  // Boxed design for main results
   const statsHTML = fakeStats.map(s => `
-    <div class="fake-stat" style="background:var(--surface); border:1px solid var(--border); padding:0.8rem; border-radius:12px; text-align:left;">
+    <div class="fake-stat" style="background:var(--surface); border:1px solid var(--border); padding:0.8rem; border-radius:12px; text-align:left; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center;">
       <div class="fs-label" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
       <div class="fs-val ${s.b ? 'bad' : ''}" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:${s.b ? 'var(--accent2)' : 'var(--accent3)'}; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
-  document.getElementById('fake-stats').innerHTML = statsHTML;
+  const fakeStatsEl = document.getElementById('fake-stats');
+  fakeStatsEl.innerHTML = statsHTML;
+  fakeStatsEl.style.cssText = "display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; width:100%; margin:0.5rem 0;";
 
-  // 3. Roast - Styled Box
+  // 3. Roast
   const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
   const roastEl = document.getElementById('roast-line');
   roastEl.textContent = `"${roast}"`;
@@ -186,19 +186,21 @@ function showFinalResults() {
   const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
-  // 6. Share Card Population - Also boxed
+  // 6. Share Card Population - FORCE 2x2 GRID
   document.getElementById('sc-badge').textContent = lv.badge;
   document.getElementById('sc-score-pct').textContent = finalScorePct;
   document.getElementById('sc-desc').textContent = lv.verdict;
   document.getElementById('sc-roast').textContent = `"${roast}"`;
   
   const scStatsHTML = fakeStats.map(s => `
-    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:left;">
+    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:left; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center;">
       <div class="scs-label" style="font-size:0.6rem; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
       <div class="scs-val" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:white; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
-  document.getElementById('sc-stats-grid').innerHTML = scStatsHTML;
+  const scStatsGrid = document.getElementById('sc-stats-grid');
+  scStatsGrid.innerHTML = scStatsHTML;
+  scStatsGrid.style.cssText = "display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; width:100%;";
 
   // Save
   if (typeof window.saveGameSession === 'function') {
