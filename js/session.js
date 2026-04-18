@@ -163,12 +163,14 @@ function showFinalResults() {
     { l: 'Decision Making', v: avgLvlIdx > 2 ? 'Compromised' : 'Functional', b: avgLvlIdx > 2 },
     { l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
   ];
-  document.getElementById('fake-stats').innerHTML = fakeStats.map(s => `
+
+  const statsHTML = fakeStats.map(s => `
     <div class="fake-stat">
       <div class="fs-label">${s.l}</div>
       <div class="fs-val ${s.b ? 'bad' : ''}">${s.v}</div>
     </div>
   `).join('');
+  document.getElementById('fake-stats').innerHTML = statsHTML;
 
   // 3. Roast
   const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
@@ -186,6 +188,15 @@ function showFinalResults() {
   document.getElementById('sc-score-pct').textContent = finalScorePct;
   document.getElementById('sc-desc').textContent = lv.verdict;
   document.getElementById('sc-roast').textContent = `"${roast}"`;
+  
+  // Also add stats to Share Card
+  const scStatsHTML = fakeStats.map(s => `
+    <div class="sc-stat">
+      <div class="scs-label">${s.l}</div>
+      <div class="scs-val ${s.b ? 'bad' : ''}">${s.v}</div>
+    </div>
+  `).join('');
+  document.getElementById('sc-stats-grid').innerHTML = scStatsHTML;
 
   // Save
   if (typeof window.saveGameSession === 'function') {
