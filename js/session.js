@@ -164,17 +164,20 @@ function showFinalResults() {
     { l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
   ];
 
+  // Boxed design for main results
   const statsHTML = fakeStats.map(s => `
-    <div class="fake-stat">
-      <div class="fs-label">${s.l}</div>
-      <div class="fs-val ${s.b ? 'bad' : ''}">${s.v}</div>
+    <div class="fake-stat" style="background:var(--surface); border:1px solid var(--border); padding:0.8rem; border-radius:12px; text-align:left;">
+      <div class="fs-label" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
+      <div class="fs-val ${s.b ? 'bad' : ''}" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:${s.b ? 'var(--accent2)' : 'var(--accent3)'}; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
   document.getElementById('fake-stats').innerHTML = statsHTML;
 
-  // 3. Roast
+  // 3. Roast - Styled Box
   const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
-  document.getElementById('roast-line').textContent = `"${roast}"`;
+  const roastEl = document.getElementById('roast-line');
+  roastEl.textContent = `"${roast}"`;
+  roastEl.style.cssText = "font-family:'DM Mono',monospace; font-style:italic; font-size:0.8rem; color:var(--accent); text-align:center; padding:1rem; background:var(--surface2); border-radius:12px; border:1px solid var(--border); margin:0.5rem 0;";
 
   // 4. Modal Data
   document.getElementById('exact-metrics-grid').innerHTML = metricsHTML.join('');
@@ -183,17 +186,16 @@ function showFinalResults() {
   const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
-  // 6. Share Card Population
+  // 6. Share Card Population - Also boxed
   document.getElementById('sc-badge').textContent = lv.badge;
   document.getElementById('sc-score-pct').textContent = finalScorePct;
   document.getElementById('sc-desc').textContent = lv.verdict;
   document.getElementById('sc-roast').textContent = `"${roast}"`;
   
-  // Also add stats to Share Card
   const scStatsHTML = fakeStats.map(s => `
-    <div class="sc-stat">
-      <div class="scs-label">${s.l}</div>
-      <div class="scs-val ${s.b ? 'bad' : ''}">${s.v}</div>
+    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:left;">
+      <div class="scs-label" style="font-size:0.6rem; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
+      <div class="scs-val" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:white; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
   document.getElementById('sc-stats-grid').innerHTML = scStatsHTML;
