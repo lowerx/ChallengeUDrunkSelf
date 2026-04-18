@@ -155,18 +155,19 @@ function showFinalResults() {
   document.getElementById('final-sub').textContent      = lv.verdict;
   document.getElementById('final-tip').textContent      = lv.tip;
 
-  // 2. Fake Stats - FORCE 2x2 GRID
+  // 2. Fake Stats - WITH ICONS
   const fakeStats = [
-    { l: 'Motor Response', v: '+' + (avgLvlIdx * 24 + 5) + '% delay', b: avgLvlIdx > 1 },
-    { l: 'Coordination', v: avgLvlIdx > 2 ? 'Unstable' : avgLvlIdx > 0 ? 'Degraded' : 'Nominal', b: avgLvlIdx > 1 },
-    { l: 'Decision Making', v: avgLvlIdx > 2 ? 'Compromised' : 'Functional', b: avgLvlIdx > 2 },
-    { l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
+    { i: '⚡', l: 'Motor Response', v: '+' + (avgLvlIdx * 24 + 5) + '% delay', b: avgLvlIdx > 1 },
+    { i: '🎯', l: 'Coordination', v: avgLvlIdx > 2 ? 'Unstable' : avgLvlIdx > 0 ? 'Degraded' : 'Nominal', b: avgLvlIdx > 1 },
+    { i: '🧠', l: 'Decision Making', v: avgLvlIdx > 2 ? 'Compromised' : 'Functional', b: avgLvlIdx > 2 },
+    { i: '🕶️', l: 'Confidence', v: avgLvlIdx > 1 ? 'Irrationally High' : 'Baseline', b: false }
   ];
 
   const statsHTML = fakeStats.map(s => `
-    <div class="fake-stat" style="background:var(--surface); border:1px solid var(--border); padding:0.8rem; border-radius:12px; text-align:left; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center;">
-      <div class="fs-label" style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
-      <div class="fs-val ${s.b ? 'bad' : ''}" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:${s.b ? 'var(--accent2)' : 'var(--accent3)'}; font-weight:600;">${s.v}</div>
+    <div class="fake-stat" style="background:var(--surface); border:1px solid var(--border); padding:0.85rem; border-radius:12px; text-align:center; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+      <div style="font-size:1.2rem; margin-bottom:0.25rem;">${s.i}</div>
+      <div class="fs-label" style="font-size:0.55rem; color:var(--muted); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
+      <div class="fs-val ${s.b ? 'bad' : ''}" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:${s.b ? 'var(--accent2)' : 'var(--accent3)'}; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
   const fakeStatsEl = document.getElementById('fake-stats');
@@ -186,16 +187,17 @@ function showFinalResults() {
   const sciTable = scores.memory ? memoryLevels : scores.stroop ? stroopLevels : scores.reaction ? rtLevels : ftLevels;
   document.getElementById('final-science').textContent = sciTable[Math.min(avgLvlIdx, 4)].sci;
 
-  // 6. Share Card Population - FORCE 2x2 GRID
+  // 6. Share Card Population - WITH ICONS
   document.getElementById('sc-badge').textContent = lv.badge;
   document.getElementById('sc-score-pct').textContent = finalScorePct;
   document.getElementById('sc-desc').textContent = lv.verdict;
   document.getElementById('sc-roast').textContent = `"${roast}"`;
   
   const scStatsHTML = fakeStats.map(s => `
-    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:left; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center;">
-      <div class="scs-label" style="font-size:0.6rem; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
-      <div class="scs-val" style="font-family:'DM Mono',monospace; font-size:0.8rem; color:white; font-weight:600;">${s.v}</div>
+    <div class="sc-stat" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.75rem; border-radius:10px; text-align:center; aspect-ratio:1/1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+      <div style="font-size:1.2rem; margin-bottom:0.25rem;">${s.i}</div>
+      <div class="scs-label" style="font-size:0.55rem; color:rgba(255,255,255,0.4); text-transform:uppercase; margin-bottom:0.2rem;">${s.l}</div>
+      <div class="scs-val" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:white; font-weight:600;">${s.v}</div>
     </div>
   `).join('');
   const scStatsGrid = document.getElementById('sc-stats-grid');
